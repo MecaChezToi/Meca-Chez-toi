@@ -857,8 +857,27 @@ input:focus, select:focus, textarea:focus {
               <div class="field"><label>Nom</label><input id="lastName" type="text" placeholder="Ex. Martin"></div>
               <div class="field"><label>Téléphone</label><input id="phone" type="tel" placeholder="Ex. 04 12 34 56 78"></div>
               <div class="field"><label>Véhicule</label><input id="vehicle" type="text" placeholder="Ex. Peugeot 308"></div>
-              <div class="field full"><label>Date</label><input id="rdvDate" type="date"></div>
+              <div class="field"><label>VIN</label><input id="vin" type="text" placeholder="Ex. VF3XXXXXXXXXXXXXX"></div>
+              <div class="field"><label>Date</label><input id="rdvDate" type="date"></div>
+              <div class="field">
+                <label>Créneau</label>
+                <select id="rdvSlot">
+                  <option value="08:00 - 10:00">08:00 - 10:00</option>
+                  <option value="10:00 - 12:00">10:00 - 12:00</option>
+                  <option value="12:00 - 14:00">12:00 - 14:00</option>
+                  <option value="14:00 - 16:00">14:00 - 16:00</option>
+                  <option value="16:00 - 18:00">16:00 - 18:00</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Lieu</label>
+                <select id="rdvLocation">
+                  <option value="À domicile">À domicile</option>
+                  <option value="Au garage">Au garage</option>
+                </select>
+              </div>
               <div class="field full"><label>Adresse</label><input id="address" type="text" placeholder="Rue ..., Flémalle"></div>
+              <div class="field full"><label>Message</label><textarea id="message" placeholder="Précisions..."></textarea></div>
             </div>
 
             <div style="margin-top:20px;">
@@ -913,8 +932,12 @@ document.getElementById("submitBooking").onclick = async function() {
     lastName: document.getElementById("lastName").value,
     phone: document.getElementById("phone").value,
     vehicle: document.getElementById("vehicle").value,
-    address: document.getElementById("address").value,
+    vin: document.getElementById("vin").value,
     date: document.getElementById("rdvDate").value,
+    slot: document.getElementById("rdvSlot").value,
+    location: document.getElementById("rdvLocation").value,
+    address: document.getElementById("address").value,
+    message: document.getElementById("message").value,
     service: bookingState.service
   };
 

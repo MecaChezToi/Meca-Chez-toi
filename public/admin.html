@@ -166,9 +166,11 @@ async function loadAppointments() {
       <span class="status ${app.status}">${app.status}</span>
       <h3>${app.first_name} ${app.last_name}</h3>
       <p>📅 ${app.date} • ${app.slot || 'N/A'}</p>
-      <p>📍 ${app.address}</p>
+      <p>📍 ${app.location || 'N/A'} • ${app.address}</p>
       <p>🚗 ${app.vehicle} (${app.service})</p>
+      <p>🆔 VIN: ${app.vin || 'Non précisé'}</p>
       <p>📞 ${app.phone}</p>
+      <p>💬 ${app.message || 'Pas de message'}</p>
       <div style="margin-top:10px; display:flex; gap:10px;">
         ${app.status === 'pending' ? `<button class="btn-mini" onclick="updateStatus(${app.id}, 'confirmed')">Confirmer</button>` : ''}
         ${app.status !== 'done' ? `<button class="btn-mini" onclick="updateStatus(${app.id}, 'done')">Terminé</button>` : ''}
