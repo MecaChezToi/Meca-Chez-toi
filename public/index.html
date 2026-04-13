@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meca'Chez Toi — Flémalle</title>
+<meta name="description" content="Entretien auto à domicile à Flémalle. Réservation simple, tarifs clairs, contact direct." />
+<style>
+:root {
+  --bg:#0b0806;
+  --bg2:#15100c;
+  --panel:#18110d;
+  --panel-soft:#211711;
+  --paper:#f1e2c6;
+  --paper-soft:#d8c4a2;
+  --rust:#b35c2e;
+  --rust-dark:#7e3d18;
+  --teal:#2e8d97;
+  --gold:#cf9f5b;
+  --line:rgba(255,255,255,.08);
+  --shadow:0 18px 60px rgba(0,0,0,.35);
+  --radius:26px;
+}
+
+.tab-btn, .btn, .choice, .slot, .mini-btn, #secretAdminAccess {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  color:var(--paper);
+  background:
+    radial-gradient(circle at top, rgba(179,92,46,.10), transparent 24%),
+    radial-gradient(circle at 90% 10%, rgba(46,141,151,.10), transparent 18%),
+    linear-gradient(180deg, #090705 0%, #110c08 100%);
+}
+body::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+img { display:block; max-width:100%; }
+button, input, select, textarea { font:inherit; }
+a { color:inherit; text-decoration:none; }
+
+.site {
+  min-height:100vh;
+  display:grid;
+  grid-template-rows:auto 1fr;
+}
+
+.topbar {
+  position:sticky;
+  top:0;
+  z-index:50;
+  backdrop-filter:blur(10px);
+  background:rgba(10,8,6,.92);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner {
+  max-width:1280px;
+  margin:auto;
+  min-height:82px;
+  padding:12px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  flex-wrap:wrap;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-width:0;
+}
+.brand-logo {
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  overflow:hidden;
+  flex-shrink:0;
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 0 0 6px rgba(255,255,255,.03);
+  background:#000;
+}
+.brand-logo img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.brand-copy {
+  line-height:1;
+}
+.brand-copy strong {
+  display:block;
+  color:var(--paper);
+  font-family:cursive;
+  font-size:1.95rem;
+  font-weight:400;
+  white-space:nowrap;
+}
+.brand-copy strong span { color:var(--teal); }
+.brand-copy small {
+  display:block;
+  margin-top:6px;
+  color:rgba(241,226,198,.55);
+  text-transform:uppercase;
+  letter-spacing:.16rem;
+  font-size:.68rem;
+}
+
+.tabs {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+}
+.tab-btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  z-index:5;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+  color:rgba(241,226,198,.76);
+  padding:12px 18px;
+  border-radius:999px;
+  cursor:pointer;
+  text-transform:uppercase;
+  letter-spacing:.12rem;
+  font-size:.78rem;
+  transition:.2s ease;
+}
+.tab-btn:hover {
+  transform:translateY(-1px);
+  border-color:rgba(207,159,91,.28);
+}
+.tab-btn.active {
+  background:linear-gradient(180deg, rgba(179,92,46,.22), rgba(126,61,24,.28));
+  color:#fff4e7;
+  border-color:rgba(179,92,46,.45);
+  box-shadow:0 10px 24px rgba(179,92,46,.18);
+}
+
+.btn {
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:13px 20px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  text-transform:uppercase;
+  letter-spacing:.12rem;
+  font-size:.78rem;
+  transition:.2s ease;
+}
+.btn:hover { transform:translateY(-1px); }
+.btn-primary {
+  background:linear-gradient(180deg,var(--rust),var(--rust-dark));
+  color:#fff7ee;
+  box-shadow:0 10px 28px rgba(179,92,46,.24);
+}
+.btn-outline {
+  background:rgba(46,141,151,.08);
+  color:var(--paper);
+  border:1px solid rgba(46,141,151,.45);
+}
+.btn-dark {
+  background:rgba(255,255,255,.03);
+  color:var(--paper);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.viewport {
+  position:relative;
+}
+.page {
+  display:none;
+  padding:18px;
+}
+.page.active {
+  display:block;
+}
+
+.page-shell {
+  max-width:1280px;
+  margin:auto;
+  display:grid;
+  gap:50px;
+  align-items:start;
+}
+
+@media (min-width: 1101px) {
+  .page-shell {
+    grid-template-columns: 1.3fr 0.7fr;
+  }
+  .hero-image {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 1100px) {
+  .page-shell {
+    grid-template-columns:1fr;
+  }
+  .hero-image {
+    width:78%;
+    max-width:420px;
+  }
+}
+
+.panel {
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.018));
+  border:1px solid var(--line);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.content {
+  padding:32px;
+}
+
+.hero-image-panel {
+  display:flex;
+  flex-direction:column;
+}
+.hero-image-wrap {
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:18px 18px 6px;
+}
+.hero-image {
+  width:92%;
+  max-width:520px;
+  min-width:320px;
+  height:auto;
+  object-fit:contain;
+  border-radius:24px;
+  box-shadow:var(--shadow);
+}
+.contact-card {
+  margin:10px 24px 24px;
+  padding:20px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+}
+.contact-card h3 {
+  margin:0 0 14px;
+  text-transform:uppercase;
+  letter-spacing:.06rem;
+  font-size:1rem;
+}
+.contact-line {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 0;
+  color:rgba(241,226,198,.82);
+  font-size:.98rem;
+}
+.contact-line + .contact-line {
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.contact-icon {
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(46,141,151,.12);
+  border:1px solid rgba(46,141,151,.25);
+}
+
+.kicker {
+  display:inline-flex;
+  align-items:center;
+  padding:9px 14px;
+  border-radius:999px;
+  background:rgba(207,159,91,.08);
+  border:1px solid rgba(207,159,91,.18);
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:.15rem;
+  font-size:.74rem;
+}
+h1, h2, h3, p {
+  margin:0;
+}
+.hero-title {
+  margin-top:18px;
+  font-size:clamp(2.6rem, 6vw, 5.2rem);
+  line-height:.95;
+  font-family:Georgia, serif;
+}
+.hero-title .accent {
+  display:block;
+  color:var(--teal);
+  font-family:cursive;
+  font-weight:400;
+  margin-top:10px;
+}
+.lead {
+  margin-top:20px;
+  color:rgba(241,226,198,.76);
+  line-height:1.8;
+  font-size:1.04rem;
+}
+
+.section-head small {
+  display:block;
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:.18rem;
+  font-size:.74rem;
+  margin-bottom:12px;
+}
+.section-head h2 {
+  font-size:clamp(2rem, 4vw, 3.5rem);
+  font-family:Georgia, serif;
+  line-height:1;
+}
+.section-head h2 em {
+  font-style:normal;
+  color:var(--teal);
+  font-family:cursive;
+  font-weight:400;
+}
+.section-head p {
+  margin-top:14px;
+  color:rgba(241,226,198,.72);
+  line-height:1.75;
+  max-width:760px;
+}
+.rule {
+  width:110px;
+  height:3px;
+  margin-top:18px;
+  background:linear-gradient(90deg, transparent, var(--rust), var(--teal), transparent);
+}
+
+.notice-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:24px;
+}
+.notice {
+  padding:20px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+}
+.notice h3 {
+  text-transform:uppercase;
+  letter-spacing:.06rem;
+  font-size:1rem;
+  margin-bottom:10px;
+}
+.notice p {
+  color:rgba(241,226,198,.74);
+  line-height:1.8;
+}
+
+.grid-3 {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-top:28px;
+}
+.card {
+  position:relative;
+  padding:24px 20px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+}
+.card::before {
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:4px;
+  background:linear-gradient(180deg,var(--rust),var(--teal));
+  border-radius:22px 0 0 22px;
+}
+.card .num {
+  position:absolute;
+  right:14px;
+  top:8px;
+  color:rgba(207,159,91,.12);
+  font-size:3.4rem;
+  font-family:Georgia, serif;
+}
+.card h3 {
+  margin-bottom:10px;
+  text-transform:uppercase;
+  letter-spacing:.06rem;
+  font-size:1.05rem;
+}
+.card p {
+  color:rgba(241,226,198,.72);
+  line-height:1.75;
+  font-size:.96rem;
+}
+.tag {
+  display:inline-block;
+  margin-top:14px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(46,141,151,.3);
+  background:rgba(46,141,151,.08);
+  color:var(--teal);
+  text-transform:uppercase;
+  letter-spacing:.1rem;
+  font-size:.68rem;
+}
+.card-actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.pricing-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  margin-top:24px;
+}
+.price-card {
+  padding:22px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+}
+.price-card h3 {
+  text-transform:uppercase;
+  letter-spacing:.08rem;
+  font-size:1rem;
+  margin-bottom:10px;
+}
+.price-card .from-label {
+  display:block;
+  color:rgba(241,226,198,.56);
+  text-transform:uppercase;
+  letter-spacing:.08rem;
+  font-size:.72rem;
+}
+.price-card .from-value {
+  display:block;
+  font-size:2.2rem;
+  color:var(--gold);
+  font-weight:bold;
+  line-height:1.05;
+  margin-top:6px;
+}
+.price-card p {
+  margin-top:12px;
+  color:rgba(241,226,198,.72);
+  line-height:1.7;
+  font-size:.95rem;
+}
+
+.price-visual {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px;
+  min-height:540px;
+}
+.price-visual img {
+  width:100%;
+  max-width:460px;
+  height:auto;
+  object-fit:contain;
+  border-radius:24px;
+  box-shadow:var(--shadow);
+}
+
+.form-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.field {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:14px;
+}
+.field.full {
+  grid-column:1/-1;
+}
+label {
+  text-transform:uppercase;
+  letter-spacing:.1rem;
+  font-size:.72rem;
+  color:rgba(241,226,198,.6);
+}
+input, select, textarea {
+  width:100%;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);
+  color:var(--paper);
+  outline:none;
+}
+textarea {
+  min-height:120px;
+  resize:vertical;
+}
+input:focus, select:focus, textarea:focus {
+  border-color:rgba(46,141,151,.45);
+  background:rgba(46,141,151,.06);
+}
+
+.service-choices {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+.choice {
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+  border-radius:18px;
+  padding:14px;
+  cursor:pointer;
+  transition:.2s ease;
+  touch-action:manipulation;
+}
+.choice:hover {
+  transform:translateY(-1px);
+  border-color:rgba(179,92,46,.34);
+}
+.choice.selected {
+  background:rgba(179,92,46,.10);
+  border-color:rgba(179,92,46,.46);
+}
+.choice strong {
+  display:block;
+  text-transform:uppercase;
+  letter-spacing:.06rem;
+  font-size:.92rem;
+}
+.choice span {
+  display:block;
+  margin-top:6px;
+  color:rgba(241,226,198,.58);
+  line-height:1.5;
+  font-size:.86rem;
+}
+
+.slot-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.slot {
+  padding:12px 10px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+  text-align:center;
+  cursor:pointer;
+  text-transform:uppercase;
+  letter-spacing:.08rem;
+  font-size:.86rem;
+  color:rgba(241,226,198,.78);
+  touch-action:manipulation;
+}
+.slot.selected {
+  background:rgba(46,141,151,.14);
+  border-color:rgba(46,141,151,.5);
+  color:var(--paper);
+}
+
+.summary-box {
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+.summary-row {
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.summary-row:last-child {
+  border-bottom:none;
+}
+.summary-row strong {
+  text-transform:uppercase;
+  letter-spacing:.08rem;
+  font-size:.72rem;
+  color:rgba(241,226,198,.56);
+}
+.summary-row span {
+  text-align:right;
+  color:var(--paper);
+}
+
+.error {
+  display:none;
+  margin-top:6px;
+  color:#ff9a8a;
+  font-size:.9rem;
+}
+.success {
+  display:none;
+  margin-top:14px;
+  padding:14px 16px;
+  border-radius:16px;
+  background:rgba(47,165,126,.11);
+  border:1px solid rgba(47,165,126,.24);
+  color:#d9fff3;
+  line-height:1.6;
+}
+
+@media (max-width: 860px) {
+  .topbar-inner {
+    justify-content:center;
+    flex-direction:column;
+    padding:10px 12px;
+  }
+  .tabs {
+    width:100%;
+  }
+  .page {
+    padding:10px;
+  }
+  .content {
+    padding:22px;
+  }
+  .grid-3, .notice-grid, .pricing-grid, .service-choices, .slot-grid, .form-grid {
+    grid-template-columns:1fr;
+  }
+  .hero-title {
+    font-size:clamp(2rem, 9vw, 3rem);
+  }
+  .lead {
+    font-size:.98rem;
+    line-height:1.7;
+  }
+}
+</style>
+</head>
+<body>
+<div class="site">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="https://images.unsplash.com/photo-1599256621730-535171e28e50?auto=format&fit=crop&q=80&w=200" alt="Logo">
+        </div>
+        <div class="brand-copy">
+          <strong>Meca'<span>Chez Toi</span></strong>
+          <small>Flémalle • Domicile & garage</small>
+        </div>
+      </div>
+
+      <nav class="tabs">
+        <a href="#home" class="tab-btn active" data-page="home">Accueil</a>
+        <a href="#pricing" class="tab-btn" data-page="pricing">Tarifs</a>
+      </nav>
+
+      <div>
+        <a href="#booking" class="btn btn-primary" data-page="booking">Prendre RDV</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="viewport">
+    <section class="page active" id="page-home">
+      <div class="page-shell">
+        <div class="panel">
+          <div class="content">
+            <span class="kicker">Mécanique auto • Flémalle • À domicile</span>
+            <h1 class="hero-title">L'entretien auto <span class="accent">sans bouger de chez vous</span></h1>
+            <p class="lead">
+              Entretien auto à domicile autour de Flémalle, avec possibilité de passage au garage selon l’intervention.
+              Lecture claire, prise de rendez-vous simple, et prestations réalistes.
+            </p>
+
+            <div class="notice-grid">
+              <div class="notice">
+                <h3>Zone d'intervention</h3>
+                <p>Flémalle et alentours. Déplacement à domicile selon distance, ou passage au garage selon l’intervention.</p>
+              </div>
+              <div class="notice">
+                <h3>Déplacements</h3>
+                <p>0–10 km gratuit, 10–20 km +20€, 20–30 km +30€.</p>
+              </div>
+            </div>
+
+            <div class="section-head" style="margin-top:30px;">
+              <small>Prestations proposées</small>
+              <h2>Services <em>essentiels</em></h2>
+              <div class="rule"></div>
+            </div>
+
+            <div class="grid-3">
+              <article class="card">
+                <div class="num">01</div>
+                <h3>Vidange & entretien</h3>
+                <p>Vidange simple, petit entretien, entretien premium, gros entretien diesel ou essence.</p>
+                <span class="tag">Cœur d'activité</span>
+                <div class="card-actions">
+                  <a href="#pricing" class="btn btn-outline service-price-btn" data-target="tarif-vidange">Voir le tarif</a>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="num">02</div>
+                <h3>Freinage</h3>
+                <p>Plaquettes avant, plaquettes arrière, ou disques + plaquettes selon le besoin.</p>
+                <span class="tag">Sécurité</span>
+                <div class="card-actions">
+                  <a href="#pricing" class="btn btn-outline service-price-btn" data-target="tarif-freins">Voir le tarif</a>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="num">03</div>
+                <h3>Batterie</h3>
+                <p>Remplacement batterie et contrôle de base, à domicile ou au garage selon le cas.</p>
+                <span class="tag">Pratique</span>
+                <div class="card-actions">
+                  <a href="#pricing" class="btn btn-outline service-price-btn" data-target="tarif-batterie">Voir le tarif</a>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="num">04</div>
+                <h3>Diagnostic</h3>
+                <p>Lecture défaut ou diagnostic complet pour faire un premier point clair.</p>
+                <span class="tag">Lecture défaut</span>
+                <div class="card-actions">
+                  <a href="#pricing" class="btn btn-outline service-price-btn" data-target="tarif-diagnostic">Voir le tarif</a>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="num">05</div>
+                <h3>Ampoules</h3>
+                <p>Changement d’ampoules possible. Pas de réglage phare sur route.</p>
+                <span class="tag">Éclairage</span>
+                <div class="card-actions">
+                  <a href="#pricing" class="btn btn-outline service-price-btn" data-target="tarif-ampoules">Voir le tarif</a>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="num">06</div>
+                <h3>Refroidissement</h3>
+                <p>Possible selon le cas. À confirmer selon intervention.</p>
+                <span class="tag">Selon devis</span>
+                <div class="card-actions">
+                  <a href="#pricing" class="btn btn-outline service-price-btn" data-target="tarif-refroidissement">Voir le tarif</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel hero-image-panel">
+          <div class="hero-image-wrap">
+            <img class="hero-image" src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=1000" alt="Mecanicien">
+          </div>
+          <div class="contact-card">
+            <h3>Contact</h3>
+            <div class="contact-line">
+              <span class="contact-icon">📞</span>
+              <span>04 xx xx xx xx</span>
+            </div>
+            <div class="contact-line">
+              <span class="contact-icon">✉️</span>
+              <span>mecacheztoi@gmail.com</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-pricing">
+      <div class="page-shell">
+        <div class="panel">
+          <div class="content">
+            <div class="section-head">
+              <small>Tarifs & déplacements</small>
+              <h2>Des tarifs <em>clairs</em></h2>
+              <div class="rule"></div>
+            </div>
+
+            <div class="pricing-grid">
+              <div class="price-card" id="tarif-vidange">
+                <h3>Vidange simple</h3>
+                <span class="from-label">À partir de</span>
+                <span class="from-value">85€</span>
+                <p>À domicile : à partir de 90€</p>
+              </div>
+              <!-- Plus de tarifs ici... -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-booking">
+      <div class="page-shell">
+        <div class="panel">
+          <div class="content">
+            <div class="section-head">
+              <small>Réservation</small>
+              <h2>Prendre <em>rendez-vous</em></h2>
+              <div class="rule"></div>
+            </div>
+
+            <div class="field">
+              <label>Choix du service</label>
+              <div class="service-choices" id="serviceChoices">
+                <div class="choice" data-service="Vidange simple" data-prix="À partir de 85€"><strong>Vidange simple</strong><span>À partir de 85€</span></div>
+                <div class="choice" data-service="Petit entretien" data-prix="À partir de 100€"><strong>Petit entretien</strong><span>À partir de 100€</span></div>
+                <div class="choice" data-service="Entretien premium" data-prix="À partir de 130€"><strong>Entretien premium</strong><span>À partir de 130€</span></div>
+                <div class="choice" data-service="Gros entretien diesel" data-prix="À partir de 170€"><strong>Gros entretien diesel</strong><span>À partir de 170€</span></div>
+                <div class="choice" data-service="Gros entretien essence" data-prix="À partir de 160€"><strong>Gros entretien essence</strong><span>À partir de 160€</span></div>
+                <div class="choice" data-service="Plaquettes avant" data-prix="À partir de 95€"><strong>Plaquettes avant</strong><span>À partir de 95€</span></div>
+                <div class="choice" data-service="Batterie" data-prix="À partir de 110€"><strong>Batterie</strong><span>À partir de 110€</span></div>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="field"><label>Prénom</label><input id="firstName" type="text" placeholder="Ex. Julien"></div>
+              <div class="field"><label>Nom</label><input id="lastName" type="text" placeholder="Ex. Martin"></div>
+              <div class="field"><label>Téléphone</label><input id="phone" type="tel" placeholder="Ex. 04 12 34 56 78"></div>
+              <div class="field"><label>Véhicule</label><input id="vehicle" type="text" placeholder="Ex. Peugeot 308"></div>
+              <div class="field full"><label>Date</label><input id="rdvDate" type="date"></div>
+              <div class="field full"><label>Adresse</label><input id="address" type="text" placeholder="Rue ..., Flémalle"></div>
+            </div>
+
+            <div style="margin-top:20px;">
+              <button class="btn btn-primary" id="submitBooking" type="button">Réserver mon rendez-vous</button>
+            </div>
+            <div class="success" id="successBox">Demande envoyée avec succès !</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const API_URL = '/api';
+const bookingState = { service: "", price: "", date: "" };
+
+function openPage(name) {
+  const cleanName = name.replace("#", "");
+  document.querySelectorAll(".page").forEach(p => {
+    p.classList.remove("active");
+    p.style.display = "none";
+  });
+  const target = document.getElementById("page-" + cleanName);
+  if (target) {
+    target.classList.add("active");
+    target.style.display = "block";
+  }
+  window.scrollTo(0, 0);
+}
+
+document.addEventListener("click", (e) => {
+  const navEl = e.target.closest("[data-page]");
+  if (navEl) {
+    e.preventDefault();
+    openPage(navEl.getAttribute("data-page"));
+  }
+});
+
+document.querySelectorAll(".choice").forEach(choice => {
+  choice.onclick = function() {
+    document.querySelectorAll(".choice").forEach(c => c.classList.remove("selected"));
+    this.classList.add("selected");
+    bookingState.service = this.dataset.service;
+    bookingState.price = this.dataset.prix;
+  };
+});
+
+document.getElementById("submitBooking").onclick = async function() {
+  const data = {
+    firstName: document.getElementById("firstName").value,
+    lastName: document.getElementById("lastName").value,
+    phone: document.getElementById("phone").value,
+    vehicle: document.getElementById("vehicle").value,
+    address: document.getElementById("address").value,
+    date: document.getElementById("rdvDate").value,
+    service: bookingState.service
+  };
+
+  try {
+    const response = await fetch(`${API_URL}/appointments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (response.ok) {
+      document.getElementById("successBox").style.display = "block";
+      setTimeout(() => openPage("home"), 2000);
+    }
+  } catch (error) {
+    alert("Erreur lors de l'envoi");
+  }
+};
+
+window.addEventListener("load", () => openPage("home"));
+</script>
+</body>
+</html>

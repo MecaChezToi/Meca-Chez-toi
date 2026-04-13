@@ -1,0 +1,20 @@
+{
+  "name": "Meca'Chez Toi Admin",
+  "short_name": "MecaAdmin",
+  "start_url": "/admin.html",
+  "display": "standalone",
+  "background_color": "#090705",
+  "theme_color": "#b35c2e",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1599256621730-535171e28e50?auto=format&fit=crop&q=80&w=192",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1599256621730-535171e28e50?auto=format&fit=crop&q=80&w=512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
