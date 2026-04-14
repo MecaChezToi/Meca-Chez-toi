@@ -501,14 +501,14 @@ h1, h2, h3, p {
 
 .form-grid {
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
+  grid-template-columns:repeat(2, 1fr);
+  gap:20px; /* Plus d'espace entre les colonnes */
 }
 .field {
   display:flex;
   flex-direction:column;
   gap:8px;
-  margin-bottom:14px;
+  margin-bottom:10px;
 }
 .field.full {
   grid-column:1/-1;
@@ -518,15 +518,35 @@ label {
   letter-spacing:.1rem;
   font-size:.72rem;
   color:rgba(241,226,198,.6);
+  font-weight: bold;
 }
 input, select, textarea {
   width:100%;
   padding:14px 16px;
   border-radius:16px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
   color:var(--paper);
   outline:none;
+  appearance: none; /* Pour un style plus contrôlé sur mobile */
+}
+/* Style spécifique pour les menus déroulants (select) pour éviter l'effet "tout blanc" */
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23f1e2c6' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+select option {
+  background-color: #18110d; /* Couleur du panneau pour que ce soit lisible */
+  color: var(--paper);
+}
+/* Correction pour le mobile : on empile les colonnes si c'est trop étroit */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 }
 textarea {
   min-height:120px;
