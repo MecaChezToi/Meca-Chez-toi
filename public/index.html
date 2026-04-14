@@ -92,6 +92,13 @@ a { color:inherit; text-decoration:none; }
   border:1px solid rgba(255,255,255,.14);
   box-shadow:0 0 0 6px rgba(255,255,255,.03);
   background:#000;
+  transition: all 0.3s ease;
+}
+@media (min-width: 1101px) {
+  .brand-logo {
+    width: 100px;
+    height: 100px;
+  }
 }
 .brand-logo img {
   width:100%;
@@ -108,6 +115,11 @@ a { color:inherit; text-decoration:none; }
   font-size:1.95rem;
   font-weight:400;
   white-space:nowrap;
+}
+@media (min-width: 1101px) {
+  .brand-copy strong {
+    font-size: 2.5rem;
+  }
 }
 .brand-copy strong span { color:var(--teal); }
 .brand-copy small {
@@ -503,7 +515,7 @@ h1, h2, h3, p {
 .form-grid {
   display:grid;
   grid-template-columns:repeat(2, 1fr);
-  gap:20px; /* Plus d'espace entre les colonnes */
+  gap:20px;
 }
 .field {
   display:flex;
@@ -529,9 +541,8 @@ input, select, textarea {
   background:rgba(255,255,255,.06);
   color:var(--paper);
   outline:none;
-  appearance: none; /* Pour un style plus contrôlé sur mobile */
+  appearance: none;
 }
-/* Style spécifique pour les menus déroulants (select) pour éviter l'effet "tout blanc" */
 select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23f1e2c6' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -539,10 +550,9 @@ select {
   padding-right: 40px;
 }
 select option {
-  background-color: #18110d; /* Couleur du panneau pour que ce soit lisible */
+  background-color: #18110d;
   color: var(--paper);
 }
-/* Correction pour le mobile : on empile les colonnes si c'est trop étroit */
 @media (max-width: 600px) {
   .form-grid {
     grid-template-columns: 1fr;
@@ -695,7 +705,7 @@ input:focus, select:focus, textarea:focus {
     <div class="topbar-inner">
       <div class="brand">
         <div class="brand-logo">
-          <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QCMRXhpZgAATU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAIdpAAQAAAABAAAAWgAAAAAAAABIAAAAAQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAABVqgAwAEAAAAAQAABHwAAAAA/8AAEQgEfAVaAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/bAEMAAgICAgICAwICAwUDAwMFBgUFBQUGCAYGBgYGCAoICAgICAgKCgoKCgoKCgwMDAwMDA4ODg4ODw8PDw8PDw8PD//bAEMBAgMDBAQEBwQEBxALCQsQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEP/dAAQAVv/aAAwDAQACEQMRAD8A/n/ooooAKKKKACiiigAooooAKXikooGmLkelJRRQDCiiigQUuR6UlFA7j91MoooEFPHSmUUASUw9aMkcUlBWwUUUUCQUUUUCCiiigApQcUlFABRRRQNig4oJzSUUCCiiigpoKKKKCQpwIptFAC5HpRk0lFA9BeKOKSigLhRRRQIKKKKACiiigaCn5FMooEOJFJkelJRQO4vFJRRQDCn/AC/5/wD10yigQUUUUAFFFFABRRRQPcKKUDNKV9KAsC06lBwOlNZuaBC0UzJpKB2Q4kUmR6UlFAXCiiigQU4Y/Gm08Ix5AzQVcaetJTyjDqCKTaaAaHFDmmke361s6boOt6y/l6TYz3jDqIYnkx/3yDXoul/Az4rart+zeG7pA38UoWED67yD+lY1cRSp/wASSR2UcJiK38KDfojyLDCkCt2FfVelfsn/ABHvmX7ddWOng9VaUyP/AN8xgg/nXotj+xbfSgSX/iNsd/s9hI/6s9ePUzvAU/iqr8z6GlwzmtX4aD+en5nwgVx3oxiv0s0b9i/wGFzreuapIVHOyK3tx+bljW5N+zT+zvoMW3VtQLt2N1qsUZ7dkZf5Vwy4jwK+Bt+iZ6ceD8y/5ecsfWS/S5+XAB7in+W542kfhX6dp4D/AGRdGMcV/NpAYjhpdRubjP18lmFUrqX9jnTtz50iUJ2jF7KT06Bl5qVn0ZfDQn/4CW+FJxX7zFU1/wBvf8A/M/DehpPm9K/SiDxv+x5AdkdvpwXuW0yeX9W5q8vxH/Y/Q4+yaY3v/Y0n9ap53P8A6Bp/cZrhuh1xtP7z8yMe3604AntX6ayfEv8AY+OM2em5/wBnRpP/AK1WF+IP7G00fzQaaD6HR5l/Var+2qn/AEDT+4pcN4d/8xtP7z8wyhP8Jpu0/wB01+ptp4g/Ywu3G+LREB677S5TH" alt="Logo">
+          <img src="https://images.unsplash.com/photo-1599256621730-535171e28e50?auto=format&fit=crop&q=80&w=300" alt="Logo">
         </div>
         <div class="brand-copy">
           <strong>Meca'<span>Chez Toi</span></strong>
@@ -809,7 +819,7 @@ input:focus, select:focus, textarea:focus {
 
         <div class="panel hero-image-panel">
           <div class="hero-image-wrap">
-            <img class="hero-image" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QCMRXhpZgAATU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAIdpAAQAAAABAAAAWgAAAAAAAABIAAAAAQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAABVqgAwAEAAAAAQAABHwAAAAA/8AAEQgEfAVaAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/bAEMAAgICAgICAwICAwUDAwMFBgUFBQUGCAYGBgYGCAoICAgICAgKCgoKCgoKCgwMDAwMDA4ODg4ODw8PDw8PDw8PD//bAEMBAgMDBAQEBwQEBxALCQsQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEP/dAAQAVv/aAAwDAQACEQMRAD8A/n/ooooAKKKKACiiigAooooAKXikooGmLkelJRRQDCiiigQUuR6UlFA7j91MoooEFPHSmUUASUw9aMkcUlBWwUUUUCQUUUUCCiiigApQcUlFABRRRQNig4oJzSUUCCiiigpoKKKKCQpwIptFAC5HpRk0lFA9BeKOKSigLhRRRQIKKKKACiiigaCn5FMooEOJFJkelJRQO4vFJRRQDCn/AC/5/wD10yigQUUUUAFFFFABRRRQPcKKUDNKV9KAsC06lBwOlNZuaBC0UzJpKB2Q4kUmR6UlFAXCiiigQU4Y/Gm08Ix5AzQVcaetJTyjDqCKTaaAaHFDmmke361s6boOt6y/l6TYz3jDqIYnkx/3yDXoul/Az4rart+zeG7pA38UoWED67yD+lY1cRSp/wASSR2UcJiK38KDfojyLDCkCt2FfVelfsn/ABHvmX7ddWOng9VaUyP/AN8xgg/nXotj+xbfSgSX/iNsd/s9hI/6s9ePUzvAU/iqr8z6GlwzmtX4aD+en5nwgVx3oxiv0s0b9i/wGFzreuapIVHOyK3tx+bljW5N+zT+zvoMW3VtQLt2N1qsUZ7dkZf5Vwy4jwK+Bt+iZ6ceD8y/5ecsfWS/S5+XAB7in+W542kfhX6dp4D/AGRdGMcV/NpAYjhpdRubjP18lmFUrqX9jnTtz50iUJ2jF7KT06Bl5qVn0ZfDQn/4CW+FJxX7zFU1/wBvf8A/M/DehpPm9K/SiDxv+x5AdkdvpwXuW0yeX9W5q8vxH/Y/Q4+yaY3v/Y0n9ap53P8A6Bp/cZrhuh1xtP7z8yMe3604AntX6ayfEv8AY+OM2em5/wBnRpP/AK1WF+IP7G00fzQaaD6HR5l/Var+2qn/AEDT+4pcN4d/8xtP7z8wyhP8Jpu0/wB01+pt" alt="Mecanicien">
+            <img class="hero-image" src="https://images.unsplash.com/photo-1599256621730-535171e28e50?auto=format&fit=crop&q=80&w=1000" alt="Logo Principal">
           </div>
           <div class="contact-card">
             <h3>Contact</h3>
@@ -933,7 +943,7 @@ input:focus, select:focus, textarea:focus {
         </div>
 
         <div class="panel price-visual">
-          <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QCMRXhpZgAATU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAIdpAAQAAAABAAAAWgAAAAAAAABIAAAAAQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAABVqgAwAEAAAAAQAABHwAAAAA/8AAEQgEfAVaAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/bAEMAAgICAgICAwICAwUDAwMFBgUFBQUGCAYGBgYGCAoICAgICAgKCgoKCgoKCgwMDAwMDA4ODg4ODw8PDw8PDw8PD//bAEMBAgMDBAQEBwQEBxALCQsQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEP/dAAQAVv/aAAwDAQACEQMRAD8A/n/ooooAKKKKACiiigAooooAKXikooGmLkelJRRQDCiiigQUuR6UlFA7j91MoooEFPHSmUUASUw9aMkcUlBWwUUUUCQUUUUCCiiigApQcUlFABRRRQNig4oJzSUUCCiiigpoKKKKCQpwIptFAC5HpRk0lFA9BeKOKSigLhRRRQIKKKKACiiigaCn5FMooEOJFJkelJRQO4vFJRRQDCn/AC/5/wD10yigQUUUUAFFFFABRRRQPcKKUDNKV9KAsC06lBwOlNZuaBC0UzJpKB2Q4kUmR6UlFAXCiiigQU4Y/Gm08Ix5AzQVcaetJTyjDqCKTaaAaHFDmmke361s6boOt6y/l6TYz3jDqIYnkx/3yDXoul/Az4rart+zeG7pA38UoWED67yD+lY1cRSp/wASSR2UcJiK38KDfojyLDCkCt2FfVelfsn/ABHvmX7ddWOng9VaUyP/AN8xgg/nXotj+xbfSgSX/iNsd/s9hI/6s9ePUzvAU/iqr8z6GlwzmtX4aD+en5nwgVx3oxiv0s0b9i/wGFzreuapIVHOyK3tx+bljW5N+zT+zvoMW3VtQLt2N1qsUZ7dkZf5Vwy4jwK+Bt+iZ6ceD8y/5ecsfWS/S5+XAB7in+W542kfhX6dp4D/AGRdGMcV/NpAYjhpdRubjP18lmFUrqX9jnTtz50iUJ2jF7KT06Bl5qVn0ZfDQn/4CW+FJxX7zFU1/wBvf8/M/M/DehpPm9K/SiDxv+x5AdkdvpwXuW0yeX9W5q8vxH/Y/Q4+yaY3v/Y0n9ap53P/AKBp/cZrhuh1xtP7z8yMe3604AntX6ayfEv8AY+OM2em5/wBnRpP/AK1WF+IP7G00fzQaaD6HR5l/Var+2qn/AEDT+4pcN4d/8xtP7z8wyhP8Jpu0/wB01+ptp4g/Ywu3G+LREB677S5TH" alt="Price Visual">
+          <img src="https://images.unsplash.com/photo-1487754161451-4a3ef59443f1?auto=format&fit=crop&q=80&w=1000" alt="Mécanique Pro">
         </div>
       </div>
     </section>
