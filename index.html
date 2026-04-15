@@ -1295,6 +1295,10 @@ document.getElementById("submitBooking").onclick = async function() {
     address_full: document.getElementById("address").value,
     message: document.getElementById("message").value,
     service: bookingState.service,
+    price: bookingState.price, // Ajout du prix
+    prix: bookingState.price,  // Variante française
+    tarif: bookingState.price, // Variante courante
+    montant: bookingState.price, // Variante montant
     status: 'pending',
     createdAt: new Date().toISOString()
   };
