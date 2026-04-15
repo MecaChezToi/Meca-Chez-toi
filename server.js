@@ -105,10 +105,28 @@ function createTables() {
 // 1. Appointments
 app.post('/api/appointments', (req, res) => {
   const { firstName, lastName, phone, address, vehicle, vin, service, date, slot, location, message } = req.body;
-  const sql = `INSERT INTO appointments (first_name, last_name, phone, address, vehicle, vin, service, date, slot, location, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  db.run(sql, [firstName, lastName, phone, address, vehicle, vin, service, date, slot, location, message], function(err) {
+  
+  // Check if slot is already taken
+  db.get("SELECT id FROM appointments WHERE date = ? AND slot = ? AND status != 'cancelled'", [date, slot], (err, row) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json({ id: this.lastID, message: 'Appointment created successfully' });
+    if (row) {
+      return res.status(400).json({ error: 'Ce créneau est déjà réservé.' });
+    }
+
+    const sql = `INSERT INTO appointments (first_name, last_name, phone, address, vehicle, vin, service, date, slot, location, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    db.run(sql, [firstName, lastName, phone, address, vehicle, vin, service, date, slot, location, message], function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ id: this.lastID, message: 'Appointment created successfully' });
+    });
+  });
+});
+
+// Get taken slots for a date
+app.get('/api/appointments/taken', (req, res) => {
+  const { date } = req.query;
+  db.all("SELECT slot FROM appointments WHERE date = ? AND status != 'cancelled'", [date], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows.map(r => r.slot));
   });
 });
 

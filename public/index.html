@@ -530,28 +530,28 @@ label {
   text-transform:uppercase;
   letter-spacing:.1rem;
   font-size:.72rem;
-  color:rgba(241,226,198,.6);
+  color:var(--paper);
   font-weight: bold;
 }
 input, select, textarea {
   width:100%;
   padding:14px 16px;
   border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.06);
-  color:var(--paper);
+  border:1px solid rgba(0,0,0,.15);
+  background:rgba(255,255,255,.9);
+  color:#111;
   outline:none;
   appearance: none;
 }
 select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23f1e2c6' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23111' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 16px center;
   padding-right: 40px;
 }
 select option {
-  background-color: #18110d;
-  color: var(--paper);
+  background-color: #fff;
+  color: #111;
 }
 @media (max-width: 600px) {
   .form-grid {
@@ -1117,10 +1117,82 @@ const inputs = ["rdvDate", "rdvSlot", "rdvLocation", "firstName", "lastName", "p
 inputs.forEach(id => {
   const el = document.getElementById(id);
   if (el) {
-    el.oninput = updateSummary;
-    el.onchange = updateSummary;
+    if (id === "rdvDate") {
+      el.onchange = (e) => {
+        updateAvailableSlots();
+        updateSummary();
+      };
+    } else {
+      el.oninput = updateSummary;
+      el.onchange = updateSummary;
+    }
   }
 });
+
+function getWeekNumber(d) {
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  return weekNo;
+}
+
+async function updateAvailableSlots() {
+  const dateVal = document.getElementById("rdvDate").value;
+  if (!dateVal) return;
+
+  const date = new Date(dateVal);
+  const day = date.getDay(); // 0: Sun, 1: Mon, ..., 5: Fri, 6: Sat
+  const weekNum = getWeekNumber(date);
+  const isEvenWeek = weekNum % 2 === 0;
+
+  let availableSlots = [];
+  const allSlots = ["08:00 - 10:00", "10:00 - 12:00", "12:00 - 14:00", "14:00 - 16:00", "16:00 - 18:00", "18:00 - 20:00"];
+
+  if (day === 5) { // Friday: all day
+    availableSlots = allSlots;
+  } else if (day === 0 || day === 6) { // Weekend
+    if (!isEvenWeek) { // Odd week: all day
+      availableSlots = allSlots;
+    } else { // Even week: not available
+      availableSlots = [];
+    }
+  } else { // Weekdays (Mon-Thu)
+    if (isEvenWeek) { // Even: 14:00 - 16:00
+      availableSlots = ["14:00 - 16:00"];
+    } else { // Odd: 08:30 - 12:00 (represented by 08:00-10:00 and 10:00-12:00)
+      availableSlots = ["08:00 - 10:00", "10:00 - 12:00"];
+    }
+  }
+
+  // Fetch taken slots from backend
+  try {
+    const res = await fetch(`${API_URL}/appointments/taken?date=${dateVal}`);
+    const takenSlots = await res.json();
+    
+    // Filter out taken slots
+    availableSlots = availableSlots.filter(s => !takenSlots.includes(s));
+  } catch (err) {
+    console.error("Error fetching taken slots", err);
+  }
+
+  const slotSelect = document.getElementById("rdvSlot");
+  slotSelect.innerHTML = "";
+  
+  if (availableSlots.length === 0) {
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "Aucun créneau disponible";
+    slotSelect.appendChild(opt);
+  } else {
+    availableSlots.forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s;
+      opt.textContent = s;
+      slotSelect.appendChild(opt);
+    });
+  }
+}
 
 function updateSummary() {
   document.getElementById("sumService").textContent = bookingState.service || "—";
@@ -1169,6 +1241,9 @@ document.getElementById("submitBooking").onclick = async function() {
         window.location.hash = "home";
         document.getElementById("successBox").style.display = "none";
       }, 4000);
+    } else {
+      const errorData = await response.json();
+      alert(errorData.error || "Erreur lors de la réservation.");
     }
   } catch (error) {
     alert("Erreur lors de l'envoi au serveur.");
@@ -1176,6 +1251,11 @@ document.getElementById("submitBooking").onclick = async function() {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  const today = new Date().toISOString().split('T')[0];
+  const dateInput = document.getElementById("rdvDate");
+  if (dateInput) {
+    dateInput.setAttribute('min', today);
+  }
   handleNavigation();
   updateSummary();
 });
