@@ -1216,7 +1216,7 @@ async function updateAvailableSlots() {
 
   // Fetch taken slots from Firestore
   try {
-    const q = query(collection(db, "appointments"), where("date", "==", dateVal));
+    const q = query(collection(db, "rdv"), where("date", "==", dateVal));
     const querySnapshot = await getDocs(q);
     const takenSlots = [];
     querySnapshot.forEach((doc) => {
@@ -1288,7 +1288,7 @@ document.getElementById("submitBooking").onclick = async function() {
 
   try {
     // 1. Double check availability in Firestore
-    const q = query(collection(db, "appointments"), 
+    const q = query(collection(db, "rdv"), 
       where("date", "==", data.date), 
       where("slot", "==", data.slot)
     );
@@ -1305,7 +1305,7 @@ document.getElementById("submitBooking").onclick = async function() {
     }
 
     // 2. Add to Firestore
-    const docRef = await addDoc(collection(db, "appointments"), data);
+    const docRef = await addDoc(collection(db, "rdv"), data);
     
     if (docRef.id) {
       document.getElementById("successBox").style.display = "block";
