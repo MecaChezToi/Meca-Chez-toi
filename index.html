@@ -834,6 +834,16 @@ input:focus, select:focus, textarea:focus {
 
               <article class="card">
                 <div class="num">06</div>
+                <h3>Bougies</h3>
+                <p>Remplacement des bougies d'allumage pour un meilleur démarrage et rendement moteur.</p>
+                <span class="tag">À partir de 80€</span>
+                <div class="card-actions">
+                  <a href="#pricing" class="btn btn-outline service-price-btn" data-target="tarif-bougies">Voir le tarif</a>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="num">07</div>
                 <h3>Refroidissement</h3>
                 <p>Possible selon le cas. À confirmer selon intervention.</p>
                 <span class="tag">Selon devis</span>
@@ -960,6 +970,13 @@ input:focus, select:focus, textarea:focus {
                 <p>Selon véhicule et accès</p>
               </div>
 
+              <div class="price-card" id="tarif-bougies">
+                <h3>Bougies d'allumage</h3>
+                <span class="from-label">À partir de</span>
+                <span class="from-value">80€</span>
+                <p>Selon modèle et accès (essence)</p>
+              </div>
+
               <div class="price-card" id="tarif-refroidissement">
                 <h3>Refroidissement</h3>
                 <span class="from-label">Base</span>
@@ -997,6 +1014,7 @@ input:focus, select:focus, textarea:focus {
                 <div class="choice" data-service="Gros entretien essence" data-prix="À partir de 160€"><strong>Gros entretien essence</strong><span>À partir de 160€</span></div>
                 <div class="choice" data-service="Plaquettes avant" data-prix="À partir de 95€"><strong>Plaquettes avant</strong><span>À partir de 95€</span></div>
                 <div class="choice" data-service="Batterie" data-prix="À partir de 110€"><strong>Batterie</strong><span>À partir de 110€</span></div>
+                <div class="choice" data-service="Bougies" data-prix="À partir de 80€"><strong>Bougies</strong><span>À partir de 80€</span></div>
                 <div class="choice" data-service="Ampoules / éclairage" data-prix="Sur devis"><strong>Ampoules / éclairage</strong><span>Sur devis</span></div>
               </div>
             </div>
@@ -1005,6 +1023,7 @@ input:focus, select:focus, textarea:focus {
               <div class="field"><label>Prénom</label><input id="firstName" type="text" placeholder="Ex. Julien"></div>
               <div class="field"><label>Nom</label><input id="lastName" type="text" placeholder="Ex. Martin"></div>
               <div class="field"><label>Téléphone</label><input id="phone" type="tel" placeholder="Ex. 04 12 34 56 78"></div>
+              <div class="field"><label>Email</label><input id="email" type="email" placeholder="Ex. julien.martin@email.com"></div>
               <div class="field"><label>Véhicule</label><input id="vehicle" type="text" placeholder="Ex. Peugeot 308 2018"></div>
               <div class="field"><label>VIN</label><input id="vin" type="text" placeholder="Ex. VF3XXXXXXXXXXXXXX"></div>
               <div class="field"><label>Date souhaitée</label><input id="rdvDate" type="date"></div>
@@ -1021,14 +1040,28 @@ input:focus, select:focus, textarea:focus {
               </div>
               <div class="field">
                 <label>Lieu</label>
-                <select id="rdvLocation">
+                <select id="rdvLocation" onchange="toggleAddressRequirement()">
                   <option value="À domicile">À domicile</option>
                   <option value="Au garage">Au garage</option>
                 </select>
               </div>
-              <div class="field"><label>Rue et numéro</label><input id="street" type="text" placeholder="Ex. Rue de la Station 12"></div>
-              <div class="field"><label>Code Postal</label><input id="zipCode" type="text" placeholder="Ex. 4400"></div>
-              <div class="field"><label>Ville</label><input id="city" type="text" placeholder="Ex. Flémalle"></div>
+              <div class="field"><label id="labelStreet">Rue et numéro *</label><input id="street" type="text" placeholder="Ex. Rue de la Station 12"></div>
+              <div class="field"><label id="labelZip">Code Postal *</label><input id="zipCode" type="text" placeholder="Ex. 4400"></div>
+              <div class="field"><label id="labelCity">Ville *</label><input id="city" type="text" placeholder="Ex. Flémalle"></div>
+              <div class="field full">
+                <label>Recevoir la confirmation par :</label>
+                <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top:5px;">
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--paper); text-transform:none; letter-spacing:normal;">
+                    <input type="checkbox" id="notifEmail" style="width:auto; margin:0;"> Email
+                  </label>
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--paper); text-transform:none; letter-spacing:normal;">
+                    <input type="checkbox" id="notifSMS" style="width:auto; margin:0;"> SMS
+                  </label>
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--paper); text-transform:none; letter-spacing:normal;">
+                    <input type="checkbox" id="notifWhatsApp" style="width:auto; margin:0;"> WhatsApp
+                  </label>
+                </div>
+              </div>
               <div class="field full"><label>Message complémentaire</label><textarea id="message" placeholder="Voyant, symptômes, précision..."></textarea></div>
             </div>
 
@@ -1089,6 +1122,18 @@ const db = getFirestore(app);
 
 const API_URL = '/api';
 const bookingState = { service: "", price: "", date: "", slot: "", location: "" };
+
+window.toggleAddressRequirement = function() {
+  const loc = document.getElementById("rdvLocation").value;
+  const isDomicile = (loc === "À domicile");
+  const labels = ["labelStreet", "labelZip", "labelCity"];
+  labels.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = el.textContent.replace(" *", "") + (isDomicile ? " *" : "");
+    }
+  });
+};
 
 function openPage(name) {
   if (!name) return;
@@ -1166,7 +1211,7 @@ document.querySelectorAll(".choice").forEach(choice => {
   };
 });
 
-const inputs = ["rdvDate", "rdvSlot", "rdvLocation", "firstName", "lastName", "phone", "vehicle", "vin", "street", "zipCode", "city", "message"];
+const inputs = ["rdvDate", "rdvSlot", "rdvLocation", "firstName", "lastName", "phone", "email", "vehicle", "vin", "street", "zipCode", "city", "message", "notifEmail", "notifSMS", "notifWhatsApp"];
 inputs.forEach(id => {
   const el = document.getElementById(id);
   if (el) {
@@ -1274,6 +1319,7 @@ document.getElementById("submitBooking").onclick = async function() {
   const data = {
     firstName: document.getElementById("firstName").value,
     lastName: document.getElementById("lastName").value,
+    email: document.getElementById("email").value,
     prenom: document.getElementById("firstName").value,
     nom: document.getElementById("lastName").value,
     name: document.getElementById("firstName").value + " " + document.getElementById("lastName").value,
@@ -1311,6 +1357,16 @@ document.getElementById("submitBooking").onclick = async function() {
     destination: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
     adresse_rdv: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value, // Nouvelle variante
     
+    // Notifications
+    notifEmail: document.getElementById("notifEmail").checked,
+    notifSMS: document.getElementById("notifSMS").checked,
+    notifWhatsApp: document.getElementById("notifWhatsApp").checked,
+    confirmation_par: [
+      document.getElementById("notifEmail").checked ? "Email" : null,
+      document.getElementById("notifSMS").checked ? "SMS" : null,
+      document.getElementById("notifWhatsApp").checked ? "WhatsApp" : null
+    ].filter(Boolean).join(", "),
+
     message: document.getElementById("message").value,
     commentaire: document.getElementById("message").value,
     comment: document.getElementById("message").value,
@@ -1327,6 +1383,12 @@ document.getElementById("submitBooking").onclick = async function() {
 
   if (!data.firstName || !data.lastName || !data.phone || !data.date || !data.slot) {
     alert("Merci de remplir les champs obligatoires (Nom, Prénom, Téléphone, Date, Créneau).");
+    return;
+  }
+
+  // Obligation d'adresse uniquement si Domicile
+  if (data.location === "À domicile" && (!data.street || !data.zipCode || !data.city)) {
+    alert("L'adresse complète (Rue, CP, Ville) est obligatoire pour une intervention à domicile.");
     return;
   }
 

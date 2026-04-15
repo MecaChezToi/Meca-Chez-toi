@@ -188,6 +188,7 @@ function listenToAppointments() {
       const fullAddr = app.adresse_complete || app.adresse || app.Adresse || app.address || app.localisation || app.full_address || app.destination || app.adresse_rdv || (app.street ? (app.street + ", " + app.zipCode + " " + app.city) : "Non spécifié");
       const displayTime = app.heure || app.creneau || app.slot || app.time || "N/A";
       const displayPrice = app.prix || app.price || app.tarif || app.montant || "À définir";
+      const notifs = app.confirmation_par || "Aucune";
 
       return `
         <div class="card">
@@ -197,8 +198,10 @@ function listenToAppointments() {
           <p>📅 ${app.date || 'N/A'} • ⏰ ${displayTime}</p>
           <p>📍 ${fullAddr}</p>
           <p>🚗 ${app.vehicule || app.vehicle || 'N/A'} (${app.service || 'N/A'})</p>
+          <p>📧 ${app.email || 'Pas d\'email'}</p>
           <p>🆔 VIN: ${app.vin || 'Non précisé'}</p>
           <p>📞 ${app.telephone || app.phone || 'N/A'}</p>
+          <p>🔔 Confirmer par: <strong>${notifs}</strong></p>
           <p>💬 ${app.commentaire || app.comment || app.note || app.observation || app.message || 'Pas de message'}</p>
           <div style="margin-top:10px; display:flex; gap:10px;">
             ${app.status === 'pending' || !app.status ? `<button class="btn-mini" onclick="updateStatus('${app.id}', 'confirmed')">Confirmer</button>` : ''}
