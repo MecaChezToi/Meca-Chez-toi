@@ -1033,7 +1033,26 @@ input:focus, select:focus, textarea:focus {
   </main>
 </div>
 
-<script>
+<script type="module">
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// TODO: Replace with your project's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAHfVNqdUTMEfLm1HVS4a4NI7jZITY7vd8",
+  authDomain: "meca-chez-toi.firebaseapp.com",
+  projectId: "meca-chez-toi",
+  storageBucket: "meca-chez-toi.firebasestorage.app",
+  messagingSenderId: "1032193346823",
+  appId: "1:1032193346823:web:9e55d41d1acf7b8ca1c9a2",
+  measurementId: "G-DG7ZJNQQR7"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const API_URL = '/api';
 const bookingState = { service: "", price: "", date: "", slot: "", location: "" };
 
@@ -1165,15 +1184,22 @@ async function updateAvailableSlots() {
     }
   }
 
-  // Fetch taken slots from backend
+  // Fetch taken slots from Firestore
   try {
-    const res = await fetch(`${API_URL}/appointments/taken?date=${dateVal}`);
-    const takenSlots = await res.json();
+    const q = query(collection(db, "appointments"), where("date", "==", dateVal));
+    const querySnapshot = await getDocs(q);
+    const takenSlots = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.status !== 'cancelled') {
+        takenSlots.push(data.slot);
+      }
+    });
     
     // Filter out taken slots
     availableSlots = availableSlots.filter(s => !takenSlots.includes(s));
   } catch (err) {
-    console.error("Error fetching taken slots", err);
+    console.error("Error fetching taken slots from Firestore", err);
   }
 
   const slotSelect = document.getElementById("rdvSlot");
@@ -1220,33 +1246,49 @@ document.getElementById("submitBooking").onclick = async function() {
     location: document.getElementById("rdvLocation").value,
     address: document.getElementById("address").value,
     message: document.getElementById("message").value,
-    service: bookingState.service
+    service: bookingState.service,
+    status: 'pending',
+    createdAt: new Date().toISOString()
   };
 
-  if (!data.firstName || !data.lastName || !data.phone || !data.date) {
-    alert("Merci de remplir les champs obligatoires (Nom, Prénom, Téléphone, Date).");
+  if (!data.firstName || !data.lastName || !data.phone || !data.date || !data.slot) {
+    alert("Merci de remplir les champs obligatoires (Nom, Prénom, Téléphone, Date, Créneau).");
     return;
   }
 
   try {
-    const response = await fetch(`${API_URL}/appointments`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+    // 1. Double check availability in Firestore
+    const q = query(collection(db, "appointments"), 
+      where("date", "==", data.date), 
+      where("slot", "==", data.slot)
+    );
+    const checkSnapshot = await getDocs(q);
+    let alreadyTaken = false;
+    checkSnapshot.forEach(doc => {
+      if (doc.data().status !== 'cancelled') alreadyTaken = true;
     });
-    if (response.ok) {
+
+    if (alreadyTaken) {
+      alert("Désolé, ce créneau vient d'être réservé. Merci d'en choisir un autre.");
+      updateAvailableSlots();
+      return;
+    }
+
+    // 2. Add to Firestore
+    const docRef = await addDoc(collection(db, "appointments"), data);
+    
+    if (docRef.id) {
       document.getElementById("successBox").style.display = "block";
       window.scrollTo(0, document.body.scrollHeight);
       setTimeout(() => {
         window.location.hash = "home";
         document.getElementById("successBox").style.display = "none";
+        location.reload(); // Refresh to clear form and update slots
       }, 4000);
-    } else {
-      const errorData = await response.json();
-      alert(errorData.error || "Erreur lors de la réservation.");
     }
   } catch (error) {
-    alert("Erreur lors de l'envoi au serveur.");
+    console.error("Firestore Error:", error);
+    alert("Erreur lors de la réservation : " + error.message);
   }
 };
 
