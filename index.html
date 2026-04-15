@@ -1268,13 +1268,20 @@ document.getElementById("submitBooking").onclick = async function() {
   const data = {
     firstName: document.getElementById("firstName").value,
     lastName: document.getElementById("lastName").value,
+    prenom: document.getElementById("firstName").value, // Version française pour l'app
+    nom: document.getElementById("lastName").value,    // Version française pour l'app
     phone: document.getElementById("phone").value,
+    telephone: document.getElementById("phone").value, // Version française pour l'app
     vehicle: document.getElementById("vehicle").value,
+    vehicule: document.getElementById("vehicle").value, // Version française pour l'app
     vin: document.getElementById("vin").value,
     date: document.getElementById("rdvDate").value,
     slot: document.getElementById("rdvSlot").value,
+    creneau: document.getElementById("rdvSlot").value,  // Version française pour l'app
+    heure: document.getElementById("rdvSlot").value,    // Parfois appelé heure
     location: document.getElementById("rdvLocation").value,
     address: document.getElementById("address").value,
+    adresse: document.getElementById("address").value,  // Version française pour l'app
     message: document.getElementById("message").value,
     service: bookingState.service,
     status: 'pending',
