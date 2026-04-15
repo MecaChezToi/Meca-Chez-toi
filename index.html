@@ -1125,6 +1125,49 @@ const db = getFirestore(app);
 const API_URL = '/api';
 const bookingState = { service: "", price: "", date: "", slot: "", location: "" };
 
+const SERVICE_PRICE_TABLE = {
+  "Vidange simple": { garage: 85, domicile: 90 },
+  "Petit entretien": { garage: 100, domicile: 110 },
+  "Entretien premium": { garage: 130, domicile: 140 },
+  "Gros entretien diesel": { garage: 170, domicile: 180 },
+  "Gros entretien essence": { garage: 160, domicile: 170 },
+  "Plaquettes avant": { garage: 95, domicile: 100 },
+  "Batterie": { garage: 110, domicile: 120 },
+  "Bougies": { garage: "À partir de 80€ (selon modèle)", domicile: "À partir de 90€ (selon modèle)" },
+  "Ampoules / éclairage": { garage: null, domicile: null }
+};
+
+function getLocationType() {
+  const loc = document.getElementById("rdvLocation")?.value;
+  return loc === "À domicile" ? "domicile" : "garage";
+}
+
+function formatPrice(value) {
+  if (value === null || value === undefined) return "Sur devis";
+  if (Number.isFinite(value)) return `À partir de ${value}€`;
+  return String(value);
+}
+
+function refreshServicePrices() {
+  const type = getLocationType();
+  document.querySelectorAll(".choice").forEach(choice => {
+    const service = choice.dataset.service;
+    const table = SERVICE_PRICE_TABLE[service];
+    if (!table) return;
+    const priceValue = table[type];
+    const priceText = formatPrice(priceValue);
+    choice.dataset.prix = priceText;
+    const priceSpan = choice.querySelector("span");
+    if (priceSpan) priceSpan.textContent = priceText;
+  });
+
+  const selected = document.querySelector(".choice.selected");
+  if (selected) {
+    bookingState.service = selected.dataset.service || bookingState.service;
+    bookingState.price = selected.dataset.prix || bookingState.price;
+  }
+}
+
 window.toggleAddressRequirement = function() {
   const loc = document.getElementById("rdvLocation").value;
   const isDomicile = (loc === "À domicile");
@@ -1135,6 +1178,8 @@ window.toggleAddressRequirement = function() {
       el.textContent = el.textContent.replace(" *", "") + (isDomicile ? " *" : "");
     }
   });
+  refreshServicePrices();
+  updateSummary();
 };
 
 function openPage(name) {
@@ -1437,6 +1482,8 @@ document.addEventListener("DOMContentLoaded", () => {
     dateInput.setAttribute('min', today);
   }
   handleNavigation();
+  refreshServicePrices();
+  toggleAddressRequirement();
   updateSummary();
 });
 </script>
