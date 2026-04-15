@@ -1048,6 +1048,21 @@ input:focus, select:focus, textarea:focus {
               <div class="field"><label id="labelStreet">Rue et numéro *</label><input id="street" type="text" placeholder="Ex. Rue de la Station 12"></div>
               <div class="field"><label id="labelZip">Code Postal *</label><input id="zipCode" type="text" placeholder="Ex. 4400"></div>
               <div class="field"><label id="labelCity">Ville *</label><input id="city" type="text" placeholder="Ex. Flémalle"></div>
+              
+              <div class="field full">
+                <label>Recevoir la confirmation par :</label>
+                <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top:5px;">
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--paper); text-transform:none; letter-spacing:normal;">
+                    <input type="checkbox" id="notifEmail" style="width:auto; margin:0;"> Email
+                  </label>
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--paper); text-transform:none; letter-spacing:normal;">
+                    <input type="checkbox" id="notifSMS" style="width:auto; margin:0;"> SMS
+                  </label>
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--paper); text-transform:none; letter-spacing:normal;">
+                    <input type="checkbox" id="notifWhatsApp" style="width:auto; margin:0;"> WhatsApp
+                  </label>
+                </div>
+              </div>
               <div class="field full">
                 <label>Recevoir la confirmation par :</label>
                 <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top:5px;">
@@ -1387,8 +1402,8 @@ document.getElementById("submitBooking").onclick = async function() {
   }
 
   // Obligation d'adresse uniquement si Domicile
-  if (data.location === "À domicile" && (!data.street || !data.zipCode || !data.city)) {
-    alert("L'adresse complète (Rue, CP, Ville) est obligatoire pour une intervention à domicile.");
+  if (data.location === "À domicile" && (!document.getElementById("street").value || !document.getElementById("zipCode").value || !document.getElementById("city").value)) {
+    alert("L'adresse complète est obligatoire pour une intervention à domicile.");
     return;
   }
 
