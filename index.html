@@ -1284,10 +1284,15 @@ document.getElementById("submitBooking").onclick = async function() {
     heure: document.getElementById("rdvSlot").value,
     time: document.getElementById("rdvSlot").value,
     location: document.getElementById("rdvLocation").value,
-    lieu: document.getElementById("rdvLocation").value, // Pour l'icône GPS
+    lieu: document.getElementById("rdvLocation").value,
+    type_rdv: document.getElementById("rdvLocation").value, // "À domicile" ou "Au garage"
     address: document.getElementById("address").value,
     adresse: document.getElementById("address").value,
-    adresse_complete: document.getElementById("address").value, // Variante adresse
+    adresse_complete: document.getElementById("address").value,
+    localisation: document.getElementById("address").value, // Très courant pour le GPS
+    adr: document.getElementById("address").value,
+    full_address: document.getElementById("address").value,
+    address_full: document.getElementById("address").value,
     message: document.getElementById("message").value,
     service: bookingState.service,
     status: 'pending',
