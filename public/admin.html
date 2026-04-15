@@ -140,10 +140,27 @@ body {
   </nav>
 </div>
 
-<script>
-const API_URL = '/api';
+<script type="module">
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-async function switchView(view) {
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAHfVNqdUTMEfLm1HVS4a4NI7jZITY7vd8",
+  authDomain: "meca-chez-toi.firebaseapp.com",
+  projectId: "meca-chez-toi",
+  storageBucket: "meca-chez-toi.firebasestorage.app",
+  messagingSenderId: "1032193346823",
+  appId: "1:1032193346823:web:9e55d41d1acf7b8ca1c9a2",
+  measurementId: "G-DG7ZJNQQR7"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.switchView = function(view) {
   document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
   document.querySelectorAll('[id^="view-"]').forEach(v => v.classList.add('hidden'));
   
@@ -152,61 +169,60 @@ async function switchView(view) {
   
   const targetView = document.getElementById(`view-${view}`);
   if (targetView) targetView.classList.remove('hidden');
+};
 
-  if (view === 'appointments') loadAppointments();
-  if (view === 'inventory') loadInventory();
-}
+// Écouter les rendez-vous en temps réel
+function listenToAppointments() {
+  const q = query(collection(db, "rdv"), orderBy("createdAt", "desc"));
+  onSnapshot(q, (querySnapshot) => {
+    const list = document.getElementById('appointmentsList');
+    const rdvs = [];
+    querySnapshot.forEach((doc) => {
+      const app = doc.data();
+      app.id = doc.id;
+      rdvs.push(app);
+    });
+    
+    list.innerHTML = rdvs.map(app => {
+      const clientName = app.name || app.client || (app.prenom + " " + app.nom) || "Client Inconnu";
+      const fullAddr = app.adresse_complete || app.adresse || app.address || app.localisation || app.lieu || "Non spécifié";
+      const displayTime = app.heure || app.creneau || app.slot || app.time || "N/A";
+      const displayPrice = app.prix || app.price || app.tarif || app.montant || "À définir";
 
-async function loadAppointments() {
-  const res = await fetch(`${API_URL}/appointments`);
-  const data = await res.json();
-  const list = document.getElementById('appointmentsList');
-  list.innerHTML = data.map(app => `
-    <div class="card">
-      <span class="status ${app.status}">${app.status}</span>
-      <h3>${app.first_name} ${app.last_name}</h3>
-      <p>📅 ${app.date} • ${app.slot || 'N/A'}</p>
-      <p>📍 ${app.location || 'N/A'} • ${app.address}</p>
-      <p>🚗 ${app.vehicle} (${app.service})</p>
-      <p>🆔 VIN: ${app.vin || 'Non précisé'}</p>
-      <p>📞 ${app.phone}</p>
-      <p>💬 ${app.message || 'Pas de message'}</p>
-      <div style="margin-top:10px; display:flex; gap:10px;">
-        ${app.status === 'pending' ? `<button class="btn-mini" onclick="updateStatus(${app.id}, 'confirmed')">Confirmer</button>` : ''}
-        ${app.status !== 'done' ? `<button class="btn-mini" onclick="updateStatus(${app.id}, 'done')">Terminé</button>` : ''}
-      </div>
-    </div>
-  `).join('') || 'Aucun rendez-vous.';
-}
-
-async function loadInventory() {
-  const res = await fetch(`${API_URL}/inventory`);
-  const data = await res.json();
-  const list = document.getElementById('inventoryList');
-  list.innerHTML = data.map(item => `
-    <div class="inventory-item">
-      <div>
-        <strong>${item.name}</strong>
-        <div style="font-size:.7rem; color:rgba(241,226,198,.5);">Seuil min: ${item.min_threshold} ${item.unit}</div>
-      </div>
-      <div class="stock-badge ${item.quantity <= item.min_threshold ? 'low' : ''}">
-        ${item.quantity} ${item.unit}
-      </div>
-    </div>
-  `).join('') || 'Inventaire vide.';
-}
-
-async function updateStatus(id, status) {
-  await fetch(`${API_URL}/appointments/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status })
+      return `
+        <div class="card">
+          <span class="status ${app.status || 'pending'}">${app.status || 'En attente'}</span>
+          <span style="float:right; color:var(--gold); font-weight:bold;">${displayPrice}</span>
+          <h3>${clientName}</h3>
+          <p>📅 ${app.date || 'N/A'} • ⏰ ${displayTime}</p>
+          <p>📍 ${fullAddr}</p>
+          <p>🚗 ${app.vehicule || app.vehicle || 'N/A'} (${app.service || 'N/A'})</p>
+          <p>🆔 VIN: ${app.vin || 'Non précisé'}</p>
+          <p>📞 ${app.telephone || app.phone || 'N/A'}</p>
+          <p>💬 ${app.commentaire || app.comment || app.message || 'Pas de message'}</p>
+          <div style="margin-top:10px; display:flex; gap:10px;">
+            ${app.status === 'pending' || !app.status ? `<button class="btn-mini" onclick="updateStatus('${app.id}', 'confirmed')">Confirmer</button>` : ''}
+            ${app.status !== 'done' ? `<button class="btn-mini" onclick="updateStatus('${app.id}', 'done')">Terminé</button>` : ''}
+            <a class="btn-mini" style="text-decoration:none;" href="https://waze.com/ul?q=${encodeURIComponent(fullAddr)}&navigate=yes">🚗 Waze</a>
+          </div>
+        </div>
+      `;
+    }).join('') || 'Aucun rendez-vous.';
   });
-  loadAppointments();
 }
+
+window.updateStatus = async function(id, status) {
+  try {
+    const rdvRef = doc(db, "rdv", id);
+    await updateDoc(rdvRef, { status });
+  } catch (e) {
+    console.error("Erreur mise à jour:", e);
+    alert("Erreur lors de la mise à jour");
+  }
+};
 
 document.getElementById('dateHeader').textContent = new Date().toLocaleDateString('fr-FR');
-loadAppointments();
+listenToAppointments();
 </script>
 </body>
 </html>
