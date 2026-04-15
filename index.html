@@ -1288,11 +1288,17 @@ document.getElementById("submitBooking").onclick = async function() {
     type_rdv: document.getElementById("rdvLocation").value, // "À domicile" ou "Au garage"
     address: document.getElementById("address").value,
     adresse: document.getElementById("address").value,
+    Adresse: document.getElementById("address").value, // Avec majuscule
     adresse_complete: document.getElementById("address").value,
-    localisation: document.getElementById("address").value, // Très courant pour le GPS
+    localisation: document.getElementById("address").value,
+    Localisation: document.getElementById("address").value, // Avec majuscule
     adr: document.getElementById("address").value,
     full_address: document.getElementById("address").value,
     address_full: document.getElementById("address").value,
+    adresse_rdv: document.getElementById("address").value,
+    lieu_rdv: document.getElementById("address").value,
+    position: document.getElementById("address").value,
+    destination: document.getElementById("address").value, // Souvent pour Waze
     message: document.getElementById("message").value,
     service: bookingState.service,
     price: bookingState.price, // Ajout du prix
