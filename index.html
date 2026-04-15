@@ -1295,8 +1295,12 @@ document.getElementById("submitBooking").onclick = async function() {
     
     // Nouveaux champs détaillés
     street: document.getElementById("street").value,
+    rue: document.getElementById("street").value,
     zipCode: document.getElementById("zipCode").value,
+    cp: document.getElementById("zipCode").value,
+    code_postal: document.getElementById("zipCode").value,
     city: document.getElementById("city").value,
+    ville: document.getElementById("city").value,
     
     // Reconstruction de l'adresse complète pour la compatibilité
     address: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
@@ -1307,6 +1311,10 @@ document.getElementById("submitBooking").onclick = async function() {
     destination: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
     
     message: document.getElementById("message").value,
+    commentaire: document.getElementById("message").value,
+    comment: document.getElementById("message").value,
+    note: document.getElementById("message").value,
+    observation: document.getElementById("message").value,
     service: bookingState.service,
     price: bookingState.price,
     prix: bookingState.price,
