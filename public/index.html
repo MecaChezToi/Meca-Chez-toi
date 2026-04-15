@@ -537,21 +537,25 @@ input, select, textarea {
   width:100%;
   padding:14px 16px;
   border-radius:16px;
-  border:1px solid rgba(0,0,0,.15);
-  background:rgba(255,255,255,.9);
-  color:#111;
+  border:2px solid var(--gold);
+  background:#ffffff !important;
+  color:#000000 !important;
   outline:none;
   appearance: none;
+  font-weight: 500;
+}
+input::placeholder, textarea::placeholder {
+  color: #666;
 }
 select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23111' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23000' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 16px center;
   padding-right: 40px;
 }
 select option {
   background-color: #fff;
-  color: #111;
+  color: #000;
 }
 @media (max-width: 600px) {
   .form-grid {
@@ -564,8 +568,9 @@ textarea {
   resize:vertical;
 }
 input:focus, select:focus, textarea:focus {
-  border-color:rgba(46,141,151,.45);
-  background:rgba(46,141,151,.06);
+  border-color:var(--teal);
+  background:#ffffff !important;
+  box-shadow: 0 0 0 4px rgba(46,141,151,0.2);
 }
 
 .service-choices {
@@ -574,8 +579,8 @@ input:focus, select:focus, textarea:focus {
   gap:12px;
 }
 .choice {
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05);
   border-radius:18px;
   padding:14px;
   cursor:pointer;
@@ -584,11 +589,16 @@ input:focus, select:focus, textarea:focus {
 }
 .choice:hover {
   transform:translateY(-1px);
-  border-color:rgba(179,92,46,.34);
+  background:rgba(255,255,255,.1);
+  border-color:var(--gold);
 }
 .choice.selected {
-  background:rgba(179,92,46,.10);
-  border-color:rgba(179,92,46,.46);
+  background:var(--paper);
+  border-color:var(--gold);
+  color:#000;
+}
+.choice.selected span {
+  color:#333;
 }
 .choice strong {
   display:block;
@@ -612,20 +622,26 @@ input:focus, select:focus, textarea:focus {
 .slot {
   padding:12px 10px;
   border-radius:16px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.05);
   text-align:center;
   cursor:pointer;
   text-transform:uppercase;
   letter-spacing:.08rem;
   font-size:.86rem;
-  color:rgba(241,226,198,.78);
+  color:var(--paper);
   touch-action:manipulation;
+  transition: .2s ease;
+}
+.slot:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--teal);
 }
 .slot.selected {
-  background:rgba(46,141,151,.14);
-  border-color:rgba(46,141,151,.5);
-  color:var(--paper);
+  background:var(--teal);
+  border-color:var(--teal);
+  color:#fff;
+  font-weight: bold;
 }
 
 .summary-box {
