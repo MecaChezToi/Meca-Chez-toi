@@ -1026,7 +1026,9 @@ input:focus, select:focus, textarea:focus {
                   <option value="Au garage">Au garage</option>
                 </select>
               </div>
-              <div class="field full"><label>Adresse / info pratique</label><input id="address" type="text" placeholder="Ex. Rue ..., Flémalle"></div>
+              <div class="field"><label>Rue et numéro</label><input id="street" type="text" placeholder="Ex. Rue de la Station 12"></div>
+              <div class="field"><label>Code Postal</label><input id="zipCode" type="text" placeholder="Ex. 4400"></div>
+              <div class="field"><label>Ville</label><input id="city" type="text" placeholder="Ex. Flémalle"></div>
               <div class="field full"><label>Message complémentaire</label><textarea id="message" placeholder="Voyant, symptômes, précision..."></textarea></div>
             </div>
 
@@ -1054,7 +1056,9 @@ input:focus, select:focus, textarea:focus {
               <div class="summary-row"><strong>Client</strong><span id="sumClient">—</span></div>
               <div class="summary-row"><strong>Véhicule</strong><span id="sumVehicle">—</span></div>
               <div class="summary-row"><strong>VIN</strong><span id="sumVin">—</span></div>
-              <div class="summary-row"><strong>Adresse</strong><span id="sumAddress">—</span></div>
+              <div class="summary-row"><strong>Rue</strong><span id="sumStreet">—</span></div>
+              <div class="summary-row"><strong>Code Postal</strong><span id="sumZipCode">—</span></div>
+              <div class="summary-row"><strong>Ville</strong><span id="sumCity">—</span></div>
             </div>
           </div>
         </div>
@@ -1162,7 +1166,7 @@ document.querySelectorAll(".choice").forEach(choice => {
   };
 });
 
-const inputs = ["rdvDate", "rdvSlot", "rdvLocation", "firstName", "lastName", "phone", "vehicle", "vin", "address", "message"];
+const inputs = ["rdvDate", "rdvSlot", "rdvLocation", "firstName", "lastName", "phone", "vehicle", "vin", "street", "zipCode", "city", "message"];
 inputs.forEach(id => {
   const el = document.getElementById(id);
   if (el) {
@@ -1259,7 +1263,9 @@ function updateSummary() {
   document.getElementById("sumClient").textContent = (document.getElementById("firstName").value + " " + document.getElementById("lastName").value).trim() || "—";
   document.getElementById("sumVehicle").textContent = document.getElementById("vehicle").value || "—";
   document.getElementById("sumVin").textContent = document.getElementById("vin").value || "—";
-  document.getElementById("sumAddress").textContent = document.getElementById("address").value || "—";
+  document.getElementById("sumStreet").textContent = document.getElementById("street").value || "—";
+  document.getElementById("sumZipCode").textContent = document.getElementById("zipCode").value || "—";
+  document.getElementById("sumCity").textContent = document.getElementById("city").value || "—";
 }
 
 document.getElementById("submitBooking").onclick = async function() {
@@ -1270,8 +1276,8 @@ document.getElementById("submitBooking").onclick = async function() {
     lastName: document.getElementById("lastName").value,
     prenom: document.getElementById("firstName").value,
     nom: document.getElementById("lastName").value,
-    name: document.getElementById("firstName").value + " " + document.getElementById("lastName").value, // Nom complet
-    client: document.getElementById("firstName").value + " " + document.getElementById("lastName").value, // Variante client
+    name: document.getElementById("firstName").value + " " + document.getElementById("lastName").value,
+    client: document.getElementById("firstName").value + " " + document.getElementById("lastName").value,
     phone: document.getElementById("phone").value,
     telephone: document.getElementById("phone").value,
     tel: document.getElementById("phone").value,
@@ -1285,26 +1291,27 @@ document.getElementById("submitBooking").onclick = async function() {
     time: document.getElementById("rdvSlot").value,
     location: document.getElementById("rdvLocation").value,
     lieu: document.getElementById("rdvLocation").value,
-    type_rdv: document.getElementById("rdvLocation").value, // "À domicile" ou "Au garage"
-    address: document.getElementById("address").value,
-    adresse: document.getElementById("address").value,
-    Adresse: document.getElementById("address").value, // Avec majuscule
-    adresse_complete: document.getElementById("address").value,
-    localisation: document.getElementById("address").value,
-    Localisation: document.getElementById("address").value, // Avec majuscule
-    adr: document.getElementById("address").value,
-    full_address: document.getElementById("address").value,
-    address_full: document.getElementById("address").value,
-    adresse_rdv: document.getElementById("address").value,
-    lieu_rdv: document.getElementById("address").value,
-    position: document.getElementById("address").value,
-    destination: document.getElementById("address").value, // Souvent pour Waze
+    type_rdv: document.getElementById("rdvLocation").value,
+    
+    // Nouveaux champs détaillés
+    street: document.getElementById("street").value,
+    zipCode: document.getElementById("zipCode").value,
+    city: document.getElementById("city").value,
+    
+    // Reconstruction de l'adresse complète pour la compatibilité
+    address: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
+    adresse: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
+    Adresse: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
+    localisation: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
+    full_address: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
+    destination: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
+    
     message: document.getElementById("message").value,
     service: bookingState.service,
-    price: bookingState.price, // Ajout du prix
-    prix: bookingState.price,  // Variante française
-    tarif: bookingState.price, // Variante courante
-    montant: bookingState.price, // Variante montant
+    price: bookingState.price,
+    prix: bookingState.price,
+    tarif: bookingState.price,
+    montant: bookingState.price,
     status: 'pending',
     createdAt: new Date().toISOString()
   };
