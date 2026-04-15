@@ -1267,6 +1267,11 @@ inputs.forEach(id => {
         updateAvailableSlots();
         updateSummary();
       };
+    } else if (id === "rdvLocation") {
+      el.onchange = () => {
+        toggleAddressRequirement();
+      };
+      el.oninput = updateSummary;
     } else {
       el.oninput = updateSummary;
       el.onchange = updateSummary;
