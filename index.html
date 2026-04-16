@@ -853,12 +853,51 @@ input:focus, select:focus, textarea:focus {
                 </div>
               </article>
             </div>
+
+            <div class="section-head" style="margin-top:36px;">
+              <small>Avis</small>
+              <h2>Avis <em>clients</em></h2>
+              <p>Laissez un petit mot et une note ⭐ pour aider les futurs clients.</p>
+              <div class="rule"></div>
+            </div>
+
+            <div class="notice" style="margin-top:18px;">
+              <div class="form-grid" style="margin-top:10px;">
+                <div class="field"><label>Votre nom</label><input id="reviewName" type="text" placeholder="Ex. Julien"></div>
+                <div class="field">
+                  <label>Note</label>
+                  <select id="reviewRating">
+                    <option value="5">★★★★★</option>
+                    <option value="4">★★★★☆</option>
+                    <option value="3">★★★☆☆</option>
+                    <option value="2">★★☆☆☆</option>
+                    <option value="1">★☆☆☆☆</option>
+                  </select>
+                </div>
+                <div class="field full"><label>Votre avis</label><textarea id="reviewMessage" placeholder="Ex. Service rapide, très pro, je recommande..."></textarea></div>
+              </div>
+              <div style="margin-top:12px; display:flex; gap:12px; flex-wrap:wrap;">
+                <button class="btn btn-primary" type="button" id="submitReview">Envoyer mon avis</button>
+              </div>
+              <div class="success" id="reviewSuccess" style="display:none; margin-top:14px;">Merci ! Votre avis a bien été envoyé.</div>
+              <div class="error" id="reviewError" style="display:none;">Merci de remplir le nom, la note et le message.</div>
+            </div>
+
+            <div id="reviewsList" style="margin-top:18px;"></div>
           </div>
         </div>
 
         <div class="panel hero-image-panel">
           <div class="hero-image-wrap">
             <img class="hero-image" src="logo.jpg" alt="Logo Principal">
+          </div>
+          <div class="contact-card">
+            <h3>Pourquoi choisir Meca'Chez Toi</h3>
+            <div class="contact-line"><span class="contact-icon">✔️</span><span>Prix clair avant intervention</span></div>
+            <div class="contact-line"><span class="contact-icon">✔️</span><span>Déplacement à domicile</span></div>
+            <div class="contact-line"><span class="contact-icon">✔️</span><span>Intervention rapide</span></div>
+            <div class="contact-line"><span class="contact-icon">✔️</span><span>Pas de surprise</span></div>
+            <div class="contact-line"><span class="contact-icon">✔️</span><span>Conseils professionnels</span></div>
           </div>
           <div class="contact-card">
             <h3>Contact</h3>
@@ -884,6 +923,16 @@ input:focus, select:focus, textarea:focus {
               <h2>Des tarifs <em>clairs</em></h2>
               <p>Affichage en base tarifaire simple, avec distinction garage / domicile.</p>
               <div class="rule"></div>
+            </div>
+
+            <div class="notice" style="margin-top:18px;">
+              <h3>📅 Important :</h3>
+              <p style="margin-top:10px; color:rgba(241,226,198,.74); line-height:1.8;">
+                Les tarifs affichés sont “à partir de”.<br>
+                Le prix final dépend du modèle, de la motorisation et des pièces.<br><br>
+                👉 Vous recevez une confirmation avec le prix exact avant validation du rendez-vous.<br>
+                👉 Aucune intervention sans votre accord 👍
+              </p>
             </div>
 
             <div class="pricing-grid">
@@ -985,6 +1034,13 @@ input:focus, select:focus, textarea:focus {
                 <p>À confirmer selon intervention</p>
               </div>
             </div>
+
+            <div class="notice" style="margin-top:18px;">
+              <p style="color:rgba(241,226,198,.78); line-height:1.8; margin:0;">
+                💡 Prix donnés à titre indicatif.<br>
+                Le tarif exact est confirmé avant intervention 👍
+              </p>
+            </div>
           </div>
         </div>
 
@@ -1003,6 +1059,16 @@ input:focus, select:focus, textarea:focus {
               <h2>Prendre <em>rendez-vous</em></h2>
               <p>Choix du service, date, créneau de 2h, infos client, VIN du véhicule, puis enregistrement direct.</p>
               <div class="rule"></div>
+            </div>
+
+            <div class="notice" style="margin-top:18px;">
+              <h3>📅 Important :</h3>
+              <p style="margin-top:10px; color:rgba(241,226,198,.74); line-height:1.8;">
+                Les tarifs affichés sont “à partir de”.<br>
+                Le prix final dépend du modèle, de la motorisation et des pièces.<br><br>
+                👉 Vous recevez une confirmation avec le prix exact avant validation du rendez-vous.<br>
+                👉 Aucune intervention sans votre accord 👍
+              </p>
             </div>
 
             <div class="field">
@@ -1063,6 +1129,9 @@ input:focus, select:focus, textarea:focus {
                     <input type="checkbox" id="notifWhatsApp" style="width:auto; margin:0;"> WhatsApp
                   </label>
                 </div>
+                <div style="margin-top:10px; color:rgba(241,226,198,.72); line-height:1.6; font-size:.95rem;">
+                  Vos choix sont enregistrés avec la demande. Vous recevez ensuite une confirmation avec le prix exact avant validation.
+                </div>
               </div>
               <div class="field full"><label>Message complémentaire</label><textarea id="message" placeholder="Voyant, symptômes, précision..."></textarea></div>
             </div>
@@ -1105,7 +1174,7 @@ input:focus, select:focus, textarea:focus {
 <script type="module">
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // TODO: Replace with your project's Firebase configuration
 const firebaseConfig = {
@@ -1365,9 +1434,54 @@ function updateSummary() {
   document.getElementById("sumCity").textContent = document.getElementById("city").value || "—";
 }
 
+function starsText(n) {
+  const v = Math.max(1, Math.min(5, parseInt(n || "0", 10) || 0));
+  return "★★★★★".slice(0, v) + "☆☆☆☆☆".slice(0, 5 - v);
+}
+
+function startReviews() {
+  const listEl = document.getElementById("reviewsList");
+  if (!listEl) return;
+
+  const qAvis = query(collection(db, "avis"), orderBy("createdAt", "desc"), limit(10));
+  onSnapshot(qAvis, (snap) => {
+    const items = [];
+    snap.forEach((d) => items.push({ id: d.id, ...d.data() }));
+    if (!items.length) {
+      listEl.innerHTML = `<div class="notice"><p style="margin:0; color:rgba(241,226,198,.74); line-height:1.8;">Aucun avis pour le moment. Soyez le premier ⭐</p></div>`;
+      return;
+    }
+    listEl.innerHTML = items.map((a) => {
+      const name = (a.name || "Client").toString();
+      const rating = starsText(a.rating);
+      const msg = (a.message || "").toString();
+      const date = a.createdAt ? new Date(a.createdAt).toLocaleDateString("fr-FR") : "";
+      return `
+        <div class="notice" style="margin-top:12px;">
+          <h3 style="display:flex; justify-content:space-between; gap:12px; align-items:center;">
+            <span>${name}</span>
+            <span style="color:var(--gold); font-weight:700; letter-spacing:.06rem;">${rating}</span>
+          </h3>
+          <p style="margin-top:10px; color:rgba(241,226,198,.74); line-height:1.8;">${msg.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
+          ${date ? `<p style="margin-top:10px; color:rgba(241,226,198,.52); font-size:.9rem;">${date}</p>` : ``}
+        </div>
+      `;
+    }).join("");
+  }, () => {
+    listEl.innerHTML = `<div class="notice"><p style="margin:0; color:rgba(241,226,198,.74); line-height:1.8;">Impossible de charger les avis pour le moment.</p></div>`;
+  });
+}
+
 document.getElementById("submitBooking").onclick = async function() {
   if (!bookingState.service) { alert("Merci de choisir un service."); return; }
   
+  const channels = [
+    document.getElementById("notifEmail").checked ? "Email" : null,
+    document.getElementById("notifSMS").checked ? "SMS" : null,
+    document.getElementById("notifWhatsApp").checked ? "WhatsApp" : null
+  ].filter(Boolean);
+  const confirmationPar = channels.join(", ");
+
   const data = {
     firstName: document.getElementById("firstName").value,
     lastName: document.getElementById("lastName").value,
@@ -1409,15 +1523,17 @@ document.getElementById("submitBooking").onclick = async function() {
     destination: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
     adresse_rdv: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value, // Nouvelle variante
     
-    // Notifications
     notifEmail: document.getElementById("notifEmail").checked,
     notifSMS: document.getElementById("notifSMS").checked,
     notifWhatsApp: document.getElementById("notifWhatsApp").checked,
-    confirmation_par: [
-      document.getElementById("notifEmail").checked ? "Email" : null,
-      document.getElementById("notifSMS").checked ? "SMS" : null,
-      document.getElementById("notifWhatsApp").checked ? "WhatsApp" : null
-    ].filter(Boolean).join(", "),
+    notif_email: document.getElementById("notifEmail").checked,
+    notif_sms: document.getElementById("notifSMS").checked,
+    notif_whatsapp: document.getElementById("notifWhatsApp").checked,
+    confirmation_par: confirmationPar,
+    confirmationPar: confirmationPar,
+    canal_confirmation: confirmationPar,
+    canaux_confirmation: channels,
+    canaux: channels,
 
     message: document.getElementById("message").value,
     commentaire: document.getElementById("message").value,
@@ -1490,6 +1606,42 @@ document.addEventListener("DOMContentLoaded", () => {
   refreshServicePrices();
   toggleAddressRequirement();
   updateSummary();
+  startReviews();
+
+  const btnReview = document.getElementById("submitReview");
+  if (btnReview) {
+    btnReview.onclick = async () => {
+      const name = (document.getElementById("reviewName")?.value || "").trim();
+      const rating = parseInt(document.getElementById("reviewRating")?.value || "0", 10);
+      const message = (document.getElementById("reviewMessage")?.value || "").trim();
+      const ok = name && message && rating >= 1 && rating <= 5;
+      const okEl = document.getElementById("reviewSuccess");
+      const errEl = document.getElementById("reviewError");
+      if (okEl) okEl.style.display = "none";
+      if (errEl) errEl.style.display = "none";
+      if (!ok) {
+        if (errEl) errEl.style.display = "block";
+        return;
+      }
+      try {
+        await addDoc(collection(db, "avis"), {
+          name,
+          rating,
+          message,
+          createdAt: new Date().toISOString()
+        });
+        if (okEl) okEl.style.display = "block";
+        document.getElementById("reviewName").value = "";
+        document.getElementById("reviewRating").value = "5";
+        document.getElementById("reviewMessage").value = "";
+      } catch (e) {
+        if (errEl) {
+          errEl.textContent = "Erreur lors de l'envoi de l'avis. Réessayez.";
+          errEl.style.display = "block";
+        }
+      }
+    };
+  }
 });
 </script>
 </body>
