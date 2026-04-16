@@ -176,32 +176,39 @@ function listenToAppointments() {
   const q = query(collection(db, "rdv"), orderBy("createdAt", "desc"));
   onSnapshot(q, (querySnapshot) => {
     const list = document.getElementById('appointmentsList');
-    const rdvs = [];
-    querySnapshot.forEach((doc) => {
-      const app = doc.data();
-      app.id = doc.id;
-      rdvs.push(app);
-    });
-    
+    const rdvs = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    function getContactInfo(app) {
+      const raw =
+        app.contactLabel || app.contact_label || app.contact_text || app.contact_info || app.contact ||
+        app.canal_contact || app.contactMethod || app.contact_method || app.contact_par || app.contactPar ||
+        app.confirmer_par || app.confirmation_par || "";
+
+      const s = (raw || "").toString().toLowerCase();
+      if (s.includes("email")) return "✉️ Email";
+      if (s.includes("sms")) return "💬 SMS";
+      if (s.includes("whatsapp") || s.includes("wa")) return "🟢 WhatsApp";
+      return "—";
+    }
+
+    list.innerHTML = rdvs.map((app) => {
       const clientName = app.name || app.client || (app.prenom + " " + app.nom) || "Client Inconnu";
-      // Correction ici : On cherche toutes les variantes possibles pour l'adresse
       const fullAddr = app.adresse_complete || app.adresse || app.Adresse || app.address || app.localisation || app.full_address || app.destination || app.adresse_rdv || (app.street ? (app.street + ", " + app.zipCode + " " + app.city) : "Non spécifié");
       const displayTime = app.heure || app.creneau || app.slot || app.time || "N/A";
       const displayPrice = app.prix || app.price || app.tarif || app.montant || "À définir";
-      const notifs = app.confirmation_par || "Aucune";
+      const contact = getContactInfo(app);
 
       return `
         <div class="card">
           <span class="status ${app.status || 'pending'}">${app.status || 'En attente'}</span>
           <span style="float:right; color:var(--gold); font-weight:bold;">${displayPrice}</span>
-          <h3>${clientName}</h3>
+          <h3>${clientName} <span style="font-size:.85rem; opacity:.8;">• Contact: ${contact}</span></h3>
           <p>📅 ${app.date || 'N/A'} • ⏰ ${displayTime}</p>
           <p>📍 ${fullAddr}</p>
           <p>🚗 ${app.vehicule || app.vehicle || 'N/A'} (${app.service || 'N/A'})</p>
           <p>📧 ${app.email || 'Pas d\'email'}</p>
           <p>🆔 VIN: ${app.vin || 'Non précisé'}</p>
           <p>📞 ${app.telephone || app.phone || 'N/A'}</p>
-          <p>🔔 Confirmer par: <strong>${notifs}</strong></p>
           <p>💬 ${app.commentaire || app.comment || app.note || app.observation || app.message || 'Pas de message'}</p>
           <div style="margin-top:10px; display:flex; gap:10px;">
             ${app.status === 'pending' || !app.status ? `<button class="btn-mini" onclick="updateStatus('${app.id}', 'confirmed')">Confirmer</button>` : ''}
