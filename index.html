@@ -1134,20 +1134,17 @@ input:focus, select:focus, textarea:focus {
               <div class="field"><label id="labelCity">Ville *</label><input id="city" type="text" placeholder="Ex. Flémalle"></div>
               
               <div class="field full">
-                <label>Recevoir la confirmation par :</label>
+                <label>À contacter par :</label>
                 <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top:5px;">
                   <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--paper); text-transform:none; letter-spacing:normal;">
-                    <input type="checkbox" id="notifEmail" style="width:auto; margin:0;"> Email
+                    <input type="radio" name="contactMethod" id="contactEmail" value="Email" style="width:auto; margin:0;"> Email
                   </label>
                   <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--paper); text-transform:none; letter-spacing:normal;">
-                    <input type="checkbox" id="notifSMS" style="width:auto; margin:0;"> SMS
+                    <input type="radio" name="contactMethod" id="contactSMS" value="SMS" style="width:auto; margin:0;"> SMS
                   </label>
                   <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--paper); text-transform:none; letter-spacing:normal;">
-                    <input type="checkbox" id="notifWhatsApp" style="width:auto; margin:0;"> WhatsApp
+                    <input type="radio" name="contactMethod" id="contactWhatsApp" value="WhatsApp" style="width:auto; margin:0;" checked> WhatsApp
                   </label>
-                </div>
-                <div style="margin-top:10px; color:rgba(241,226,198,.72); line-height:1.6; font-size:.95rem;">
-                  Votre demande est enregistrée. Je vous recontacte rapidement par SMS, email ou WhatsApp pour confirmer le prix exact selon votre véhicule, avant validation définitive du rendez-vous.
                 </div>
               </div>
               <div class="field full"><label>Message complémentaire</label><textarea id="message" placeholder="Voyant, symptômes, précision..."></textarea></div>
@@ -1353,7 +1350,7 @@ document.querySelectorAll(".choice").forEach(choice => {
   };
 });
 
-const inputs = ["rdvDate", "rdvSlot", "rdvLocation", "firstName", "lastName", "phone", "email", "vehicle", "vin", "street", "zipCode", "city", "message", "notifEmail", "notifSMS", "notifWhatsApp"];
+const inputs = ["rdvDate", "rdvSlot", "rdvLocation", "firstName", "lastName", "phone", "email", "vehicle", "vin", "street", "zipCode", "city", "message"];
 inputs.forEach(id => {
   const el = document.getElementById(id);
   if (el) {
@@ -1372,6 +1369,10 @@ inputs.forEach(id => {
       el.onchange = updateSummary;
     }
   }
+});
+
+document.querySelectorAll('input[name="contactMethod"]').forEach((el) => {
+  el.addEventListener('change', updateSummary);
 });
 
 function getWeekNumber(d) {
@@ -1501,12 +1502,8 @@ function startReviews() {
 document.getElementById("submitBooking").onclick = async function() {
   if (!bookingState.service) { alert("Merci de choisir un service."); return; }
   
-  const channels = [
-    document.getElementById("notifEmail").checked ? "Email" : null,
-    document.getElementById("notifSMS").checked ? "SMS" : null,
-    document.getElementById("notifWhatsApp").checked ? "WhatsApp" : null
-  ].filter(Boolean);
-  const confirmationPar = channels.join(", ");
+  const contactMethod = document.querySelector('input[name="contactMethod"]:checked')?.value || "WhatsApp";
+  const contactLabel = `Contacté par ${contactMethod.toLowerCase()}`;
 
   const data = {
     firstName: document.getElementById("firstName").value,
@@ -1549,17 +1546,17 @@ document.getElementById("submitBooking").onclick = async function() {
     destination: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value,
     adresse_rdv: document.getElementById("street").value + ", " + document.getElementById("zipCode").value + " " + document.getElementById("city").value, // Nouvelle variante
     
-    notifEmail: document.getElementById("notifEmail").checked,
-    notifSMS: document.getElementById("notifSMS").checked,
-    notifWhatsApp: document.getElementById("notifWhatsApp").checked,
-    notif_email: document.getElementById("notifEmail").checked,
-    notif_sms: document.getElementById("notifSMS").checked,
-    notif_whatsapp: document.getElementById("notifWhatsApp").checked,
-    confirmation_par: confirmationPar,
-    confirmationPar: confirmationPar,
-    canal_confirmation: confirmationPar,
-    canaux_confirmation: channels,
-    canaux: channels,
+    contactMethod,
+    contact_method: contactMethod,
+    contactPar: contactMethod,
+    contact_par: contactMethod,
+    contacte_par: contactMethod,
+    canal_contact: contactMethod,
+    contactLabel,
+    contact_label: contactLabel,
+    contact_text: contactLabel,
+    contactPref: contactMethod,
+    contact_preference: contactMethod,
 
     message: document.getElementById("message").value,
     commentaire: document.getElementById("message").value,
