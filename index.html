@@ -1077,15 +1077,18 @@ input:focus, select:focus, textarea:focus {
             <div class="field">
               <label>Choix du service</label>
               <div class="service-choices" id="serviceChoices">
-                <div class="choice" data-service="Vidange simple" data-prix="À partir de 85€"><strong>Vidange simple</strong><span>À partir de 85€</span></div>
-                <div class="choice" data-service="Petit entretien" data-prix="À partir de 100€"><strong>Petit entretien</strong><span>À partir de 100€</span></div>
-                <div class="choice" data-service="Entretien premium" data-prix="À partir de 130€"><strong>Entretien premium</strong><span>À partir de 130€</span></div>
-                <div class="choice" data-service="Gros entretien diesel" data-prix="À partir de 170€"><strong>Gros entretien diesel</strong><span>À partir de 170€</span></div>
-                <div class="choice" data-service="Gros entretien essence" data-prix="À partir de 160€"><strong>Gros entretien essence</strong><span>À partir de 160€</span></div>
-                <div class="choice" data-service="Plaquettes avant" data-prix="À partir de 95€"><strong>Plaquettes avant</strong><span>À partir de 95€</span></div>
-                <div class="choice" data-service="Batterie" data-prix="À partir de 110€"><strong>Batterie</strong><span>À partir de 110€</span></div>
-                <div class="choice" data-service="Bougies" data-prix="À partir de 80€"><strong>Bougies</strong><span>À partir de 80€</span></div>
+                <div class="choice" data-service="Vidange simple" data-prix="À partir de 99€"><strong>Vidange simple</strong><span>À partir de 99€</span></div>
+                <div class="choice" data-service="Entretien intermédiaire" data-prix="À partir de 149€"><strong>Entretien intermédiaire</strong><span>À partir de 149€</span></div>
+                <div class="choice" data-service="Gros entretien" data-prix="À partir de 199€"><strong>Gros entretien</strong><span>À partir de 199€</span></div>
+                <div class="choice" data-service="Révision constructeur" data-prix="Sur devis"><strong>Révision constructeur</strong><span>Sur devis</span></div>
+                <div class="choice" data-service="Plaquettes avant" data-prix="À partir de 109€"><strong>Plaquettes avant</strong><span>À partir de 109€</span></div>
+                <div class="choice" data-service="Plaquettes arrière" data-prix="À partir de 109€"><strong>Plaquettes arrière</strong><span>À partir de 109€</span></div>
+                <div class="choice" data-service="Disques + plaquettes" data-prix="À partir de 329€"><strong>Disques + plaquettes</strong><span>À partir de 329€</span></div>
+                <div class="choice" data-service="Lecture défaut électronique" data-prix="À partir de 39€"><strong>Lecture défaut électronique</strong><span>À partir de 39€</span></div>
+                <div class="choice" data-service="Batterie" data-prix="Sur devis"><strong>Batterie</strong><span>Sur devis</span></div>
                 <div class="choice" data-service="Ampoules / éclairage" data-prix="Sur devis"><strong>Ampoules / éclairage</strong><span>Sur devis</span></div>
+                <div class="choice" data-service="Bougies" data-prix="À partir de 89€"><strong>Bougies</strong><span>À partir de 89€</span></div>
+                <div class="choice" data-service="Refroidissement" data-prix="Sur devis"><strong>Refroidissement</strong><span>Sur devis</span></div>
               </div>
             </div>
 
@@ -1204,15 +1207,18 @@ const API_URL = '/api';
 const bookingState = { service: "", price: "", date: "", slot: "", location: "" };
 
 const SERVICE_PRICE_TABLE = {
-  "Vidange simple": { garage: 85, domicile: 90 },
-  "Petit entretien": { garage: 100, domicile: 110 },
-  "Entretien premium": { garage: 130, domicile: 140 },
-  "Gros entretien diesel": { garage: 170, domicile: 180 },
-  "Gros entretien essence": { garage: 160, domicile: 170 },
-  "Plaquettes avant": { garage: 95, domicile: 100 },
-  "Batterie": { garage: 110, domicile: 120 },
-  "Bougies": { garage: "À partir de 80€ (selon modèle)", domicile: "À partir de 90€ (selon modèle)" },
-  "Ampoules / éclairage": { garage: null, domicile: null }
+  "Vidange simple": { garage: 99, domicile: 119 },
+  "Entretien intermédiaire": { garage: 149, domicile: 169 },
+  "Gros entretien": { garage: 199, domicile: 229 },
+  "Révision constructeur": { garage: null, domicile: null },
+  "Plaquettes avant": { garage: 109, domicile: 129 },
+  "Plaquettes arrière": { garage: 109, domicile: 129 },
+  "Disques + plaquettes": { garage: 329, domicile: 359 },
+  "Lecture défaut électronique": { garage: 39, domicile: 49 },
+  "Batterie": { garage: null, domicile: null },
+  "Ampoules / éclairage": { garage: null, domicile: null },
+  "Bougies": { garage: 89, domicile: 109 },
+  "Refroidissement": { garage: null, domicile: null }
 };
 
 function getLocationType() {
